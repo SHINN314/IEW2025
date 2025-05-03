@@ -1,4 +1,6 @@
 import nim_calc
 
 if __name__=="__main__":
-  print(nim_calc.nim_sum(1, 4))
+  a = 5
+  b = 50
+  print(nim_calc.nim_mult(a, b))
