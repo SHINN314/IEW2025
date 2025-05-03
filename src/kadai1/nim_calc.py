@@ -28,4 +28,4 @@ def nim_mult(a, b):
       result ^= a  # 加算は XOR
     a <<= 1
     b >>= 1
-    return result
+  return result
