@@ -1,6 +1,8 @@
-import nim_calc
+from chomp import chomp
 
-if __name__=="__main__":
-  a = 5
-  b = 50
-  print(nim_calc.nim_mult(a, b))
+chomp_game = chomp(3, 3)
+chomp_game.print_board()
+chomp_game.delete_space(1, 1)
+chomp_game.delete_space(0, 0)
+chomp_game.delete_space(1, 0)
+chomp_game.delete_space(2, 1)
