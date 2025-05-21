@@ -11,14 +11,17 @@ class chomp():
       Number of columns in the board.
   board : list
       The game board represented as a 2D list.
+      If the space element is 1, it means the space is not deleted.
+      If the space element is 0, it means the space is deleted.
+      If the space element is 2, it means the space is poison chocolate.
   is_finished : bool
       Flag to indicate if the game is finished.
   """
   def __init__(self, k: int, l: int):
     self.row = k
     self.col = l
-    self.board = [[1 for _ in range(self.col)] for _ in range(self.row)]
-    self.board[self.row-1][0] = 2
+    self.board = [[1 for _ in range(self.col)] for _ in range(self.row)] # initialize board with 1
+    self.board[self.row-1][0] = 2 # set poison chocolate
     self.is_finished = False
 
   def print_board(self):
