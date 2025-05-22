@@ -1,4 +1,4 @@
-class chomp():
+class Chomp():
   """
   Chomp game class.
   Board index starts from (0, 0) at the top left corner.
