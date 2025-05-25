@@ -5,10 +5,10 @@ class Chomp():
   
   Attributes
   ----------
-  k : int
-      Number of rows in the board.
-  l : int
-      Number of columns in the board.
+  row : int
+      Number of rows in the board, not max row index.
+  col : int
+      Number of columns in the board, not max col index.
   board : list
       The game board represented as a 2D list.
       If the space element is 1, it means the space is not deleted.
