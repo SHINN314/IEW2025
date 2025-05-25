@@ -16,13 +16,34 @@ class Chomp():
       If the space element is 2, it means the space is poison chocolate.
   is_finished : bool
       Flag to indicate if the game is finished.
+  next_player : object
+      A player who operate next.
+  prev_player : object
+      A player who operate prev.
   """
-  def __init__(self, k: int, l: int):
+  def __init__(self, k: int, l: int, next_player: object, prev_player: object):
     self.row = k
     self.col = l
+    self.next_player = next_player
+    self.prev_player = prev_player
     self.board = [[1 for _ in range(self.col)] for _ in range(self.row)] # initialize board with 1
     self.board[self.row-1][0] = 2 # set poison chocolate
     self.is_finished = False
+
+  def swap_prev_next(self, prev_player: object, next_player: object):
+    """
+    A function that swap next_player and prev_player.
+
+    Parameters
+    -------
+    prev_player : object
+        A player who prev_player before call this function.
+    next_player : object
+        A player who next_player before call this function.
+    """
+    tmp_player = self.prev_player
+    self.prev_player = self.next_player
+    self.next_player = tmp_player
 
   def print_board(self):
     """
@@ -78,24 +99,29 @@ class Chomp():
     col : int
         The column index of the space to delete.
     """
-    if (
-      row < 0 or
-      row >= self.row or
-      col < 0 or
-      col >= self.row
-    ):
+    if (row < 0 or row >= self.row or col < 0 or col >= self.row):
+      # call warning if player select a space which is out of board
       print("Invalid move")
       return
+    
     elif (self.board[row][col] == 0):
+      # call warning if player select a space which is deleted
       print("This space is already deleted")
       return
+    
     elif (self.board[row][col] == 2):
+      # call warning if player select a poison space
       print("Choose another space")
       return
+    
     else:
       for i in range(0, row+1):
         for j in range(col, self.col):
           self.board[i][j] = 0
+
       self.print_board()
+
       if (self.check_game_over()):
-        print("You win")
+        print(f'{self.next_player} win!')
+      else:
+        self.swap_prev_next(self.prev_player, self.next_player)

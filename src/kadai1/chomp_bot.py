@@ -2,7 +2,7 @@ from chomp import Chomp
 
 class ChompBot:
   """
-  This class is a bot for chomp.
+  This class is a bot for 2 times n chomp.
 
   Attributes
   ----------
