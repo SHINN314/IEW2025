@@ -3,17 +3,25 @@ from chomp import Chomp
 class SquareChompBot:
   """
   A bot which optimized for square chomp board.
-  This class is usefull if this bot is a first player of the geme
-
-  Attributes
-  ----------
-  board : list
-      The current state of the board.
+  This class is usefull if this bot is a first player of the geme.
   """
   def __init__(self):
     pass
 
   def is_symmetric_board(chomp: Chomp) -> bool:
+    """
+    Check current board is symmetrical.
+    If given board is symmetric, it mean that the board is square board.
+
+    Parameters
+    -------
+    chomp : Chomp
+        Chomp instance which have current board information.
+
+    Returns
+    -------
+    bool
+    """
     board = chomp.board
     transposed_board = [list(x) for x in zip(*board)]
 
@@ -56,8 +64,10 @@ class SquareChompBot:
         elif board[chomp.row-1][i] > board[chomp.row-1-i][0]: 
           # case if horizon edge is longer than vertical edge
           chomp.delete_space(row=chomp.row-1, col=col_space)
+          break
 
         else:
+          # update row_space and col_space
           row_space += 1
           col_space += 1
     
