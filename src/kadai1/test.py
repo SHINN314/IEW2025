@@ -19,13 +19,28 @@ _________ .__
   selection = input("Select number: ")
   print("-" * 100)
 
-  if selection == 1:
+  if selection == "1":
+    print("Start game!")
     # square chomp
-    row = input("Input row of the board: ")
-    col = input("Input col of the board: ")
-    next_player = "bot"
-    prev_player = "you"
-    chomp = Chomp()
+    # init variables
+    bot_name = "bot"
+    player_name = "you"
+    n = int(input("Input size of square board: "))
+
+    bot = SquareChompBot()
+    chomp = Chomp(row=n, col=n, next_player=bot_name, prev_player=player_name)
+
+    while(not chomp.is_finished):
+      if chomp.next_player == bot_name:
+        # bot operate
+        bot.delete_space(chomp=chomp)
+
+      else:
+        # player operate
+        row_delete = input("Input row of delete space: ")
+        col_delete = input("Input column of delete space: ")
+        chomp.delete_space(row=row_delete, col=col_delete)
+
     
 if __name__ == "__main__":
   main()

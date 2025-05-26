@@ -36,7 +36,7 @@ class SquareChompBot:
     
     Parameters
     ----------
-    Chomp : Chomp
+    chomp : Chomp
         The chomp object.
     row : int
         The row index of the space to set.
