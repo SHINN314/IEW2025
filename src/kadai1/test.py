@@ -38,11 +38,9 @@ _________ .__
 
       else:
         # player operate
-        print(player_name + " turn")
         row_delete = input("Input row of delete space: ")
         col_delete = input("Input column of delete space: ")
         chomp.delete_space(row=row_delete, col=col_delete)
-
     
 if __name__ == "__main__":
   main()

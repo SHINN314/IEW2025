@@ -23,10 +23,10 @@ class SquareChompBot:
     -------
     bool
     """
-    board = chomp.board
-    transposed_board = [list(x) for x in zip(*board)]
+    mirrered_board = [row[::-1] for row in chomp.board]
+    transposed_board = [list(x) for x in zip(*mirrered_board)]
 
-    if board == transposed_board:
+    if mirrered_board == transposed_board:
       return True
     
     return False

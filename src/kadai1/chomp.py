@@ -41,6 +41,8 @@ class Chomp():
     next_player : object
         A player who next_player before call this function.
     """
+
+    print("swap prev and next player")
     tmp_player = self.prev_player
     self.prev_player = self.next_player
     self.next_player = tmp_player
@@ -117,6 +119,7 @@ class Chomp():
     
     else:
       # delete spaces
+      print("delete space")
       for i in range(0, row+1):
         for j in range(col, self.col):
           self.board[i][j] = 0
