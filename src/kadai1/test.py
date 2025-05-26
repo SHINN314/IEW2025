@@ -38,8 +38,8 @@ _________ .__
 
       else:
         # player operate
-        row_delete = input("Input row of delete space: ")
-        col_delete = input("Input column of delete space: ")
+        row_delete = int(input("Input row of delete space: "))
+        col_delete = int(input("Input column of delete space: "))
         chomp.delete_space(row=row_delete, col=col_delete)
     
 if __name__ == "__main__":

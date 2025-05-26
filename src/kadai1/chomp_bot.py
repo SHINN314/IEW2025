@@ -40,9 +40,9 @@ class SquareChompBot:
     chomp : Chomp
         The chomp object.
     row : int
-        The row index of the space to set.
+        The row index of the space to set. The row is not zero-indexed.
     col : int
-        The column index of the space to set.
+        The column index of the space to set. The column is not zero-indexed.
     """
     if self.is_symmetric_board(chomp):
       # case square board
