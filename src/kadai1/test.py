@@ -1,6 +1,8 @@
 from chomp import Chomp
 from chomp_bot import SquareChompBot
 
+import time # debug
+
 def main():
   # main menu
   print("""\
@@ -35,6 +37,7 @@ _________ .__
         # bot operate
         print(bot_name + " turn")
         bot.delete_space(chomp=chomp)
+        time.sleep(1) # debug
 
       else:
         # player operate
