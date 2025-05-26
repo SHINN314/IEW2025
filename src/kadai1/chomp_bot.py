@@ -23,11 +23,8 @@ class SquareChompBot:
     -------
     bool
     """
-    print(chomp.board) # debug code
     mirrered_board = [row[::-1] for row in chomp.board]
-    print(mirrered_board) # debug code
     transposed_board = [list(x) for x in zip(*mirrered_board)]
-    print(transposed_board) # debug code
 
     if mirrered_board == transposed_board:
       return True
@@ -35,7 +32,6 @@ class SquareChompBot:
     return False
 
   def delete_space(self, chomp: Chomp):
-    print("delete space") # debug
     """
     Set the space on the board.
     
@@ -49,7 +45,6 @@ class SquareChompBot:
         The column index of the space to set.
     """
     if self.is_symmetric_board(chomp):
-      print("symetric case") # debug
       # case square board
       row_space = chomp.row-2
       col_space = 1
@@ -57,7 +52,6 @@ class SquareChompBot:
 
     else:
       # case unsymmetrical l board
-      print("unsymetric case") # debug
       row_space = chomp.row-1
       col_space = 0
       board = chomp.board
