@@ -30,7 +30,7 @@ class Chomp():
     self.board[self.row-1][0] = 2 # set poison chocolate
     self.is_finished = False
 
-  def swap_prev_next(self, prev_player: object, next_player: object):
+  def swap_prev_next(self):
     """
     A function that swap next_player and prev_player.
 
@@ -91,6 +91,7 @@ class Chomp():
   def delete_space(self, row: int, col: int):
     """
     Delete the space from the board.
+    After delete space, this method switch next_player and prev_player.
     
     Parameters
     ----------
@@ -115,6 +116,7 @@ class Chomp():
       return
     
     else:
+      # delete spaces
       for i in range(0, row+1):
         for j in range(col, self.col):
           self.board[i][j] = 0
@@ -124,4 +126,4 @@ class Chomp():
       if (self.check_game_over()):
         print(f'{self.next_player} win!')
       else:
-        self.swap_prev_next(self.prev_player, self.next_player)
+        self.swap_prev_next()
