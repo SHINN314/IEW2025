@@ -1,6 +1,8 @@
 from chomp import Chomp
 from chomp_bot import SquareChompBot
 
+import time # for debug
+
 def main():
   # main menu
   print("""\
@@ -38,10 +40,14 @@ _________ .__
 
       else:
         # player operate
-        print(player_name + " turn")
+        print(player_name + " turn") # debug code
         row_delete = input("Input row of delete space: ")
         col_delete = input("Input column of delete space: ")
         chomp.delete_space(row=row_delete, col=col_delete)
+
+      # debug code
+      print(chomp.next_player)
+      time.sleep(1)
 
     
 if __name__ == "__main__":
