@@ -21,9 +21,9 @@ class Chomp():
   prev_player : object
       A player who operate prev.
   """
-  def __init__(self, k: int, l: int, next_player: object, prev_player: object):
-    self.row = k
-    self.col = l
+  def __init__(self, row: int, col: int, next_player: object, prev_player: object):
+    self.row = row
+    self.col = col
     self.next_player = next_player
     self.prev_player = prev_player
     self.board = [[1 for _ in range(self.col)] for _ in range(self.row)] # initialize board with 1
