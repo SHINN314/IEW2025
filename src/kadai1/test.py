@@ -33,10 +33,12 @@ _________ .__
     while(not chomp.is_finished):
       if chomp.next_player == bot_name:
         # bot operate
+        print(bot_name + " turn")
         bot.delete_space(chomp=chomp)
 
       else:
         # player operate
+        print(player_name + " turn")
         row_delete = input("Input row of delete space: ")
         col_delete = input("Input column of delete space: ")
         chomp.delete_space(row=row_delete, col=col_delete)
