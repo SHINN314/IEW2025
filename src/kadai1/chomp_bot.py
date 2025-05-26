@@ -8,6 +8,7 @@ class SquareChompBot:
   def __init__(self):
     pass
 
+  @staticmethod
   def is_symmetric_board(chomp: Chomp) -> bool:
     """
     Check current board is symmetrical.
