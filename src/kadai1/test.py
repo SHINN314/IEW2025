@@ -28,9 +28,13 @@ _________ .__
     bot_name = "bot"
     player_name = "you"
     n = int(input("Input size of square board: "))
-
     bot = SquareChompBot()
     chomp = Chomp(row=n, col=n, next_player=bot_name, prev_player=player_name)
+
+    print("Game start!")
+    chomp.print_board()
+
+    time.sleep(1)
 
     while(not chomp.is_finished):
       if chomp.next_player == bot_name:
