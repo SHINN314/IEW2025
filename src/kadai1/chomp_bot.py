@@ -69,6 +69,6 @@ class SquareChompBot:
 
         else:
           # update row_space and col_space
-          row_space += 1
+          row_space -= 1
           col_space += 1
     
