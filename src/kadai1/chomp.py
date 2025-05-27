@@ -51,7 +51,18 @@ class Chomp():
     """
     Print the current state of the board.
     """
+    # print column index
+    for i in range(self.col+1):
+      if i == 0:
+        print("  ", end="")
+      else:
+        print(i, end=" ")
+    print()
+
+    # print board
     for i in range(self.row):
+      # print row index
+      print(i+1, end=" ")
       for j in range(self.row):
         if self.board[i][j] == 1:
           print("■", end=" ")
@@ -60,6 +71,9 @@ class Chomp():
         else:
           print(" ", end=" ")
       print()
+    
+
+
     print()
 
   def get_board(self) -> list:
