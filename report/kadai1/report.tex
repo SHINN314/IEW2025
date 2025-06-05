@@ -13,6 +13,7 @@
 \usepackage{tikz}
 \usepackage{float}
 \usepackage{listings}
+\usepackage{amssymb}
 
 % lstlistingのsetting
 \lstset{
@@ -114,10 +115,108 @@
 \begin{document}
 % タイトル
 \begin{center}
-{\Large{\bf タイトル}} \\
+{\Large{\bf 情報工学工房第1回レポート}} \\
 {\bf 電気通信大学 Ⅰ類 コンピュータサイエンスプログラム 3年} \\
 {\bf 2311081 木村慎之介} \\
 \end{center}
+
+\section{はじめに}
+本課題においては、プログラムを実装する言語としてpythonを用いた。
+
+\section{ニム和とニム積を求めるプログラム}
+\subsection{ニム和を求めるプログラム}
+\hspace{1em}ニム和と求めるプログラムは以下のように実装を行った。
+
+\begin{lstlisting}[caption={ニム和を求めるプログラム}, label=code_nim_sum]
+def nim_sum(a, b):
+  return a ^ b
+\end{lstlisting}
+
+ニム和の定義は排他的論理和であったから、2つの引数\(a, b\)に対して、そのXORを返す処理を行っている。
+% 実行例は以下のようになった。
+
+% \begin{lstlisting}[caption={ニム和の実行例}, label=output_nim_sum]
+% >>> nim_calc.nim_sum(1, 1)
+% 0
+% >>> nim_calc.nim_sum(1, 0)
+% 1
+% >>> nim_calc.nim_sum(0, 0)
+% 0
+% >>> nim_calc.nim_sum(1, 3)
+% 2
+% \end{lstlisting}
+
+% 以上より、ニム和が正しく実行できていることが確認できた。
+
+\subsection{ニム積を求めるプログラム}
+\hspace{1em}ニム積は最小除外数というものによって定義されていたため、まず最小除外数の定義から確認する。
+
+\begin{dfn}[最小除外数]
+\(T\)を\(\mathbb{N}_0\)の真部分集合であるとする。\(T\)の最小除外数\(\text{mex}(T)\)は次のように定義される。
+\begin{equation}
+\text{mex}(T) = \min(\mathbb{N}_0 \backslash T)
+\end{equation}
+\label{dfn_mex}
+\end{dfn}
+
+定義\ref{dfn_mex}に基づいて最小除外数を求める関数mexを以下のように実装した。
+
+\begin{lstlisting}[caption={最小除外数を求める関数}, label=code_mex]
+"""
+Calculate mex value.
+
+Values
+----------
+T: list
+Finate subsete of N_0.
+
+Returns
+----------
+i: int
+Mex.
+"""
+i = 0
+
+while((i in T)):
+  i += 1
+
+return i
+\end{lstlisting}
+
+次にニム積のを求めるプログラムを実装する。
+ニム積は最小除外数を用いて以下のように定義される演算である。
+
+\begin{dfn}[ニム積]
+非負整数\(a, b\)が与えられた時、以下の演算をニム積と定義する。
+\begin{equation}
+a \otimes b = \text{mex}(\{(a' \otimes b) \oplus (a \otimes b') \oplus (a' \otimes b') | 0 \leq a' < a, 0 \leq b' < b\})
+\end{equation}
+\label{dfn_nim_times}
+\end{dfn}
+
+定義\ref{dfn_nim_times}をもとにニム積を求める関数nim\_timesを以下のように実装した。
+
+\begin{lstlisting}[caption={ニム積を求める関数}, label=code_nim_times]
+def nim_times(a, b):
+  if(a == 0 or b == 0):
+    return 0
+  
+  T = []
+  
+  for a_prime in range(0, a):
+    for b_prime in range(0, b):
+      t = nim_sum(nim_times(a_prime, b), nim_times(a, b_prime))
+      t = nim_sum(t, nim_times(a_prime, b_prime))
+
+      if(not(t in T)):
+        T.append(t)
+
+  return mex.mex(T)
+\end{lstlisting}
+
+コード\ref{code_nim_times}では基底として\(a = 0 \lor b = 0\)のときに\(0\)を返し、それ以外のときはコード\ref{code_nim_sum}とコード\ref{code_mex}定義したニム和と最小除外数を求める関数を用いて再帰的にニム積を求めている。
+\(a = 0 \lor b = 0\)のときにニム積が\(0\)になることは\(0 \leq x < 0\)を満たす実数\(x\)が存在しないことから集合\(\{(a' \otimes b) \oplus (a \otimes b') \oplus (a' \otimes b') | 0 \leq a' < a, 0 \leq b' < b\}\)が空集合となることより求められる。\\
+さてこのプログラムでもニム積を求めることは可能ではあるが、ニム積の定義より今のアルゴリズムでは少なくとも指数関数的に増えることは用意に想像できる。
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
