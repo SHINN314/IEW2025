@@ -125,7 +125,7 @@
 
 \section{ニム和とニム積を求めるプログラム}
 \subsection{ニム和を求めるプログラム}
-\hspace{1em}まずニム和の定義を確認する。
+\hspace{1em}まずニム和の定義を確認する\cite{combination_game_theory}。
 
 \begin{dfn}[ニム和]
 2つの非負整数\(a, b\)に対し、その排他的論理和をニム和という
@@ -155,7 +155,7 @@ def nim_sum(a, b):
 % 以上より、ニム和が正しく実行できていることが確認できた。
 
 \subsection{ニム積を求めるプログラム}
-\hspace{1em}ニム積は最小除外数というものによって定義されていたため、まず最小除外数の定義から確認する。
+\hspace{1em}ニム積は最小除外数というものによって定義されていたため、まず最小除外数の定義から確認する\cite{combination_game_theory}。
 
 \begin{dfn}[最小除外数]
 \(T\)を\(\mathbb{N}_0\)の真部分集合であるとする。\(T\)の最小除外数\(\text{mex}(T)\)は次のように定義される。
@@ -190,10 +190,10 @@ return i
 \end{lstlisting}
 
 次にニム積のを求めるプログラムを実装する。
-ニム積は最小除外数を用いて以下のように定義される演算である。
+ニム積は最小除外数を用いて以下のように定義される演算である\cite{combination_game_theory}。
 
 \begin{dfn}[ニム積]
-非負整数\(a, b\)が与えられた時、以下の演算をニム積と定義する。
+非負整数\(a, b\)が与えられた時、以下の演算をニム積と定義する\cite{combination_game_theory}。
 \begin{equation}
 a \otimes b = \text{mex}(\{(a' \otimes b) \oplus (a \otimes b') \oplus (a' \otimes b') | 0 \leq a' < a, 0 \leq b' < b\})
 \end{equation}
@@ -226,30 +226,351 @@ def nim_times(a, b):
 \section{CHOMPの先手必勝戦略}
 \subsection{CHOMPの説明}
 \hspace{1em}CHOMPとは、左下の1マスに毒がある板チョコを交互に食べていき、毒のマスのチョコを食べた人が負になるというゲームである。
-チョコを食べるルールとしては、マスを選んだとき、そのマスの右一列と上一列を含む右上すべての領域を食べることがルールである。
+チョコを食べるルールとしては、マスを選んだとき、そのマスの右一列と上一列を含む右上すべての領域を食べることがルールである\cite{combination_game_theory}。
 
 
 \subsection{\(k \times l\)マスのCHOMPが先手必勝であることの証明}
 \hspace{1em}次にCHOMPに関する以下の命題を証明する\cite{chomp_existence_theorem}。
-なお、以下の証明に出てくる「先手」と「後手」は、ゲーム開始時に最初に手を打つプレイヤーを「先手」、そうでないプレイヤーを「後手」と呼ぶことに注意する。
+なお、証明\ref{prop_chomp}に出てくる「先手」と「後手」は、ゲーム開始時に最初に手を打つプレイヤーを「先手」、そうでないプレイヤーを「後手」と呼ぶことに注意する。
 
 \begin{prop}
 \(k \times l(k, l > 1)\)の長方形のCHOMPの局面では、必ず先手のプレイヤーが必勝戦略を持つ。
 \label{prop_chomp}
 \end{prop}
 
-\begin{proof}[命題\ref{prop_chomp}の証明]
-背理法を用いて証明する。
-
-\(k \times l(k, l > 1)\)長方形の局面において、後手が必勝戦略を持つとする。
+\begin{proof}[命題\ref{prop_chomp}の証明] \\
+\hspace{1em}背理法を用いて証明する。
+\hspace{1em}\(k \times l(k, l > 1)\)長方形の局面において、後手が必勝戦略を持つとする。
 すると、先手がどのような手をとっても必ず後手に有利な手が存在することになる。 \\
-さて、ここで先手が最初に一番右上の1マスを取ったとする。
+\hspace{1em}さて、ここで先手が最初に一番右上の1マスを取ったとする。
 このとき後手となっていたプレイヤーは先手がマスを取った行をすべて取ることで、\((k-1) \times l\)の長方形の局面を先手に押し付けることができる。
 この局面もまた長方形の局面であったから先手のプレイヤーがどのような手を打っても必ず後手が勝つ戦略が存在することになる。 \\
-しかし、先手は一番上の行を取り除く手を打ち、\((k-1) \times l\)局面を後手に渡すことができてしまい、先手が必勝戦略を持つことになってしまう。
+\hspace{1em}しかし、先手は一番上の行を取り除く手を打ち、\((k-1) \times l\)局面を後手に渡すことができてしまい、先手が必勝戦略を持つことになってしまう。
 これは最初の仮定に矛盾する。
 よって、先手が必勝戦略を持つ。
 \end{proof}
+
+以下では具体的なCHOMPの盤面における必勝法について考察する。
+
+\subsection{\(n \times n(n > 1)\)局面の必勝法}
+\hspace{1em}比較的容易に必勝戦略が求まる\(n \times n\)局面のCHOMPについて考察する。
+正方形型のCHOMPにおいては先手は以下の戦略に乗っ取ることで確実に勝利することができる。
+
+\begin{enumerate}
+\item まず最初に毒チョコの右上のマスを選択してL字の対象な盤面を作る
+\item 以降後手が毒チョコを取るまで後手の取った手と対象になるようにマスを選択していく
+\end{enumerate}
+
+縦横1列の対象なL字盤面において、その盤面が\(\mathcal{P}\)局面であることは以下のように証明できる。
+
+\begin{proof}[対称L字盤面が\(\mathcal{P}\)局面であることの証明] \\
+\hspace{1em}数学的帰納法を用いて証明を行う。\\
+\hspace{1em}盤面が縦横1マスのL字盤面のとき、最初のプ レイヤーは毒のマスをとる選択肢しかない。
+よって\(\mathcal{P}\)局面となる。 \\
+\hspace{1em}\(n > 2\)について、任意の非負整数\(k \leq n\)において縦横\(k\)マスのL字盤面が\(\mathcal{P}\)局面であると仮定し、縦横\(n+1\)マスのL字盤面について考える。
+最初のプレイヤーは毒のマスを取らないように横か縦のいずれかのマスをとるという選択肢が与えられている。
+それに対し、次のプレイヤーが最初のプレイヤーが打った手と対称に手を打つと縦横\(l < n+1\)のL字盤面となり、仮定からこれは\(\mathcal{P}\)局面となる。
+よって縦横\(n+1\)マスのL字局面も\(\mathcal{P}\)局面となる。
+\label{prop_n_times_n_chomp}
+\end{proof}
+
+以上の命題をシミュレーションするため簡易的なCHOMPのゲームを作った。
+以下ではCHOMPゲームのために作成した2つのクラスと1つのテストスクリプトのソースコードを載せる。
+
+\begin{lstlisting}[caption={CHOMPゲームのクラス}]
+class Chomp():
+  """
+  Chomp game class.
+  Board index starts from (0, 0) at the top left corner.
+  
+  Attributes
+  ----------
+  row : int
+      Number of rows in the board, not max row index.
+  col : int
+      Number of columns in the board, not max col index.
+  board : list
+      The game board represented as a 2D list.
+      If the space element is 1, it means the space is not deleted.
+      If the space element is 0, it means the space is deleted.
+      If the space element is 2, it means the space is poison chocolate.
+  is_finished : bool
+      Flag to indicate if the game is finished.
+  next_player : object
+      A player who operate next.
+  prev_player : object
+      A player who operate prev.
+  """
+  def __init__(self, row: int, col: int, next_player: object, prev_player: object):
+    self.row = row
+    self.col = col
+    self.next_player = next_player
+    self.prev_player = prev_player
+    self.board = [[1 for _ in range(self.col)] for _ in range(self.row)] # initialize board with 1
+    self.board[self.row-1][0] = 2 # set poison chocolate
+    self.is_finished = False
+
+  def swap_prev_next(self):
+    """
+    A function that swap next_player and prev_player.
+
+    Parameters
+    -------
+    prev_player : object
+        A player who prev_player before call this function.
+    next_player : object
+        A player who next_player before call this function.
+    """
+
+    print("swap prev and next player")
+    tmp_player = self.prev_player
+    self.prev_player = self.next_player
+    self.next_player = tmp_player
+
+  def print_board(self):
+    """
+    Print the current state of the board.
+    """
+    # print column index
+    for i in range(self.col+1):
+      if i == 0:
+        print("  ", end="")
+      else:
+        print(i, end=" ")
+    print()
+
+    # print board
+    for i in range(self.row):
+      # print row index
+      print(i+1, end=" ")
+      for j in range(self.row):
+        if self.board[i][j] == 1:
+          print("■", end=" ")
+        elif self.board[i][j] == 2:
+          print("□", end=" ")
+        else:
+          print(" ", end=" ")
+      print()
+    
+
+
+    print()
+
+  def get_board(self) -> list:
+    """
+    Get the current state of the board.
+    
+    Returns
+    -------
+    list
+        The current state of the board.
+    """
+    return self.board
+
+  def check_game_over(self) -> bool:
+    """
+    Check if the game is over.
+    
+    Returns
+    -------
+    bool
+        True if the game is over, False otherwise.
+    """
+    if (
+      self.board[self.row-2][0] == 0 and
+      self.board[self.row-2][1] == 0 and
+      self.board[self.row-1][1] == 0
+    ):
+      self.is_finished = True
+      return True
+
+  def delete_space(self, row: int, col: int):
+    """
+    Delete the space from the board.
+    After delete space, this method switch next_player and prev_player.
+    
+    Parameters
+    ----------
+    row : int
+        The row index of the space to delete.
+    col : int
+        The column index of the space to delete.
+    """
+    if (row < 0 or row >= self.row or col < 0 or col >= self.row):
+      # call warning if player select a space which is out of board
+      print("Invalid move")
+      return
+    
+    elif (self.board[row][col] == 0):
+      # call warning if player select a space which is deleted
+      print("This space is already deleted")
+      return
+    
+    elif (self.board[row][col] == 2):
+      # call warning if player select a poison space
+      print("Choose another space")
+      return
+    
+    else:
+      # delete spaces
+      print("delete space")
+      for i in range(0, row+1):
+        for j in range(col, self.col):
+          self.board[i][j] = 0
+
+      self.print_board()
+
+      if (self.check_game_over()):
+        print(f'{self.next_player} win!')
+      else:
+        self.swap_prev_next()
+\end{lstlisting}
+
+このクラスではCHOMPの盤面の情報、ボードの縦横のサイズ、各プレイヤーの状態を管理する変数を保持している。
+また、メソッドには現在の盤面を出力するprint\_board、盤面の情報を取得するget\_board、ゲームが終わったか判定するcheck\_game\_over、そしてマスを選択したときに適切に盤面からマスを削除するdelete\_spaceを定義した。
+次に\(n \times n\)盤面のCHOMPで、先手のときに必ず勝つbotのクラスを以下のように定義した。
+
+\begin{lstlisting}[caption={\(n \times n\)盤面で必ず勝つbotのクラス}, label=n_times_n_chomp_bot]
+from chomp import Chomp 
+
+class SquareChompBot:
+  """
+  A bot which optimized for square chomp board.
+  This class is usefull if this bot is a first player of the geme.
+  """
+  def __init__(self):
+    pass
+
+  @staticmethod
+  def is_symmetric_board(chomp: Chomp) -> bool:
+    """
+    Check current board is symmetrical.
+    If given board is symmetric, it mean that the board is square board.
+
+    Parameters
+    -------
+    chomp : Chomp
+        Chomp instance which have current board information.
+
+    Returns
+    -------
+    bool
+    """
+    mirrered_board = [row[::-1] for row in chomp.board]
+    transposed_board = [list(x) for x in zip(*mirrered_board)]
+
+    if mirrered_board == transposed_board:
+      return True
+    
+    return False
+
+  def delete_space(self, chomp: Chomp):
+    """
+    Set the space on the board.
+    
+    Parameters
+    ----------
+    chomp : Chomp
+        The chomp object.
+    row : int
+        The row index of the space to set. The row is not zero-indexed.
+    col : int
+        The column index of the space to set. The column is not zero-indexed.
+    """
+    if self.is_symmetric_board(chomp):
+      # case square board
+      row_space = chomp.row-2
+      col_space = 1
+      chomp.delete_space(row=row_space, col=col_space)
+
+    else:
+      # case unsymmetrical l board
+      row_space = chomp.row-1
+      col_space = 0
+      board = chomp.board
+
+      for i in range(0, chomp.row):
+        if board[chomp.row-1-i][0] > board[chomp.row-1][i]:
+          # case if vertical edge is longer than horizon edge
+          chomp.delete_space(row=row_space, col=0)
+          break
+
+        elif board[chomp.row-1][i] > board[chomp.row-1-i][0]: 
+          # case if horizon edge is longer than vertical edge
+          chomp.delete_space(row=chomp.row-1, col=col_space)
+          break
+
+        else:
+          # update row_space and col_space
+          row_space -= 1
+          col_space += 1
+    
+\end{lstlisting}
+
+このクラスでは\(n \times n\)盤面の必勝アルゴリズムにそって手を打つようにメソッドdelete\_spaceを定義した。
+また、下請け関数として、is\_symmetric\_boardを定義し、盤面が対称であるか否かを判定した。
+今回のプログラムでは盤面が対称か否かで正方形盤面かL字盤面かが判定できるため、この下請け関数を定義した。
+最後に実際のゲームをコマンドライン上で実行するためのプログラムを載せる。
+
+\begin{lstlisting}[caption={\(n \times n\)局面のCHOMPゲームのコード}]
+from chomp import Chomp
+from chomp_bot import SquareChompBot
+
+import time # debug
+
+def main():
+  # main menu
+  print("""\
+_________ .__                           
+\_   ___ \|  |__   ____   _____ ______  
+/    \  \/|  |  \ /  _ \ /     \\____ \ 
+\     \___|   Y  (  <_> )  Y Y  \  |_> >
+ \______  /___|  /\____/|__|_|  /   __/ 
+        \/     \/             \/|__|    """)
+  print("-" * 100)
+  print("Welcome to Chomp!")
+  print("Select number what you do next.")
+  print("1. Start game")
+  print("2. Check rules")
+  print("3. Exit")
+  selection = input("Select number: ")
+  print("-" * 100)
+
+  if selection == "1":
+    print("Start game!")
+    # square chomp
+    # init variables
+    bot_name = "bot"
+    player_name = "you"
+    n = int(input("Input size of square board: "))
+    bot = SquareChompBot()
+    chomp = Chomp(row=n, col=n, next_player=bot_name, prev_player=player_name)
+
+    print("Game start!")
+    chomp.print_board()
+
+    time.sleep(1)
+
+    while(not chomp.is_finished):
+      if chomp.next_player == bot_name:
+        # bot operate
+        print(bot_name + " turn")
+        bot.delete_space(chomp=chomp)
+        time.sleep(1) # debug
+
+      else:
+        # player operate
+        row_delete = int(input("Input row of delete space: "))
+        row_delete -= 1
+        col_delete = int(input("Input column of delete space: "))
+        col_delete -= 1
+        chomp.delete_space(row=row_delete, col=col_delete)
+    
+if __name__ == "__main__":
+  main()
+\end{lstlisting}
+
+このゲームでは\ref{n_times_n_chomp_bot}が先手を取っており、プレイヤーが必ず負けるようになっている。
 
 \begin{thebibliography}{99}
 \bibitem{combination_game_theory} 安福智明, 坂井公, 末續鴻輝. 組み合わせゲーム理論の世界〜数学で解き明かす必勝法〜, 共立出版株式会社, 2024.
