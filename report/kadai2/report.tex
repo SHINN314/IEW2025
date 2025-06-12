@@ -1,0 +1,305 @@
+\documentclass[uplatex,dvipdfmx,a4paper,10pt]{jsarticle}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{latexsym}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage[separate-uncertainty]{siunitx}
+\usepackage{physics}
+\usepackage{enumerate}
+\usepackage{bm}
+\usepackage{pdfpages}
+\usepackage{pxchfon}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{amssymb}
+
+% lstlistingのsetting
+\lstset{
+    basicstyle={\ttfamily},
+    identifierstyle={\small},
+    commentstyle={\smallitshape},
+    keywordstyle={\small\bfseries},
+    ndkeywordstyle={\small},
+    stringstyle={\small\ttfamily},
+    frame={tb},
+    breaklines=true,
+    columns=[l]{fullflexible},
+    numbers=left,
+    xrightmargin=0zw,
+    xleftmargin=3zw,
+    numberstyle={\scriptsize},
+    stepnumber=1,
+    numbersep=1zw,
+    lineskip=-0.5ex
+}
+
+% tikz setting
+\usepackage{tikz}
+\usetikzlibrary{automata, intersections, calc, arrows, positioning, arrows.meta}
+
+% theories setting (for japanese language)
+\usepackage{amsmath}
+\usepackage{amsthm}
+
+\theoremstyle{definition}
+\newtheorem{thm}{定理}[section]
+\newtheorem{lem}[thm]{補題}
+\newtheorem{prop}[thm]{命題}
+\newtheorem{cor}[thm]{系}
+\newtheorem{ass}[thm]{仮定}
+\newtheorem{conj}[thm]{予想}
+\newtheorem{dfn}[thm]{定義}
+\newtheorem{rem}[thm]{注}
+
+\newtheorem*{thm*}{定理}
+\newtheorem*{lem*}{補題}
+\newtheorem*{prop*}{命題}
+\newtheorem*{cor*}{系}
+\newtheorem*{ass*}{仮定}
+\newtheorem*{conj*}{予想}
+\newtheorem*{dfn*}{定義}
+\newtheorem*{rem*}{注}
+
+% \renewcommand{\rmdefault}{pplj}
+% \renewcommand{\sfdefault}{phv}
+
+\setlength{\textwidth}{165mm} %165mm-marginparwidth
+\setlength{\marginparwidth}{40mm}
+\setlength{\textheight}{225mm}
+\setlength{\topmargin}{-5mm}
+\setlength{\oddsidemargin}{-3.5mm}
+% \setlength{\parindent}{0pt}
+
+\def\vector#1{\mbox{\boldmath $#1$}}
+\newcommand{\AmSLaTeX}{%
+ $\mathcal A$\lower.4ex\hbox{$\!\mathcal M\!$}$\mathcal S$-\LaTeX}
+\newcommand{\PS}{{\scshape Post\-Script}}
+\def\BibTeX{{\rmfamily B\kern-.05em{\scshape i\kern-.025em b}\kern-.08em
+ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125em X}}
+\newcommand{\DeLta}{{\mit\Delta}}
+\renewcommand{\d}{{\rm d}}
+\def\wcaption#1{\caption[]{\parbox[t]{100mm}{#1}}}
+\def\rm#1{\mathrm{#1}}
+\def\tempC{^\circ \rm{C}}
+
+\makeatletter
+\def\section{\@startsection {section}{1}{\z@}{-3.5ex plus -1ex minus -.2ex}{2.3ex plus .2ex}{\Large\bf}}
+\def\subsection{\@startsection {subsection}{2}{\z@}{-3.25ex plus -1ex minus -.2ex}{1.5ex plus .2ex}{\normalsize\bf}}
+\def\subsubsection{\@startsection {subsubsection}{3}{\z@}{-3.25ex plus -1ex minus -.2ex}{1.5ex plus .2ex}{\small\bf}}
+\makeatother
+
+\makeatletter
+\def\@seccntformat#1{\@ifundefined{#1@cntformat}%
+   {\csname the#1\endcsname\quad}%      default
+   {\csname #1@cntformat\endcsname}%    enable individual control
+}
+
+% proof enviroment
+\renewenvironment{proof}[1][\proofname]{\par
+  \pushQED{\qed}%
+  \normalfont \topsep6\p@\@plus6\p@\relax
+  \trivlist
+  \item\relax
+  {\bfseries
+  #1\@addpunct{.}}\hspace\labelsep\ignorespaces
+}{%
+  \popQED\endtrivlist\@endpefalse
+}
+\makeatother
+
+\newcommand{\tenexp}[2]{#1\times10^{#2}}
+
+
+\begin{document}
+% タイトル
+\begin{center}
+{\Large{\bf 情報工学工房第2回レポート}} \\
+{\bf 電気通信大学 Ⅰ類 コンピュータサイエンスプログラム 3年} \\
+{\bf 2311081 木村慎之介} \\
+\end{center}
+
+\section{All-but ニム}
+\hspace{1em}本レポートではAll-but ニム、特にFESアルゴリズムについて調べたことを記述する。
+
+\subsection{FESアルゴリズム}
+\hspace{1em}まずはFESアルゴリズムがどのようなアルゴリズムであるかを載せる。\cite{combination_game_theory}
+
+\begin{dfn}[FESアルゴリズム]
+各ステップ\(k\)に対して、\(\mathcal{G}(m) = k\)となるすべての\(m\)を以下のように求めるアルゴリズムである。 \\
+\begin{itemize}
+  \item \(m = \min(\{i\ |\ \mathcal{G}(i)\text{が未確定}\})\)とした時、\(\mathcal{G} = k\)とする
+  \item \(t \in T\)について昇順に調べた時、\(t\)と\(m' < m + t\)かつ\(\mathcal{G}(m') = k\)を満たす\(m'\)に対して、\((m + t) - m' \in T\)であるときに\(\mathcal{G} = k\)とする
+\end{itemize}
+\label{dfn_fes}
+\end{dfn}
+
+\subsection{FESアルゴリズムがすべての局面のグランディ数を求めていることの証明}
+\hspace{1em}次に定義\ref{dfn_fes}のアルゴリズムが正しくAll-but ニムのすべての局面のグランディ数を正しく求めていることを証明する。
+証明する際にはステップ\(k\)についての帰納法を用いて証明するが、帰納部分は参考文献\cite{combination_game_theory}pp.43-44で証明されているため、ここでは基底のみを証明する。
+
+\begin{proof}[アルゴリズム\ref{dfn_fes}の基底の証明] \\
+\hspace{1em}\(k = 0\)のときに、グランディ数が\(0\)である局面が定義\ref{dfn_fes}のアルゴリズムですべて求まることを証明する。
+\hspace{1em}FESアルゴリズムでは最初に未決定の局面で最小の局面のグランディ数\(0\)とする。
+ここでは\(m = 0\)となる局面のグランディ数が\(\mathcal{G}(0) = 0\)となる。
+これはグランディ数の定義からすぐに\(\mathcal{G}(0) = 0\)と求まるため、正しくグランディ数が求まっている。 \\
+\hspace{1em}次に昇順に\(t \in T\)を取ってきた場合を考える。
+この時\(m' < t\)で\(\mathcal{G}(m') = 0\)となる局面がすべて求まっていると仮定する。
+\(m' < t\)で\(\mathcal{G}(m') = 0\)になる任意の\(m'\)について\(t - m' \in T\)となる場合、石が\(t\)個の局面からグランディ数が\(0\)の局面に1手で遷移できないため、\(\mathcal{G}(t) = 0\)となる。
+逆にある\(m'\)が存在して\(m' < t\ \land\ \mathcal{G}(m') \ \land\ t - m' \notin T\)となる場合、石が\(t\)個の局面から1手でグランディ数が\(0\)の局面に遷移できるため\(\mathcal{G}(t) \neq 0\)となる。\\
+\hspace{1em}最後に\(t \notin T\)となる\(t\)については、石の数が\(0\)である局面に1手で遷移できる(石を\(t\)個取り除けば良い)ので、\(\mathcal{G}(t) \neq 0\)となる。\\
+\hspace{1em}以上よりFESアルゴリズムでグランディ数が\(0\)である局面を過不足なく求められることが証明された。
+\label{proop_fes}
+\end{proof}
+
+\subsection{FESアルゴリズムを実行するプログラム}
+\hspace{1em}次にFESアルゴリズムの実装を行う。
+実装は以下のように行った。
+
+\begin{lstlisting}[caption={FESアルゴリズムの実装コード}, label={code_fes}]
+# program finite excluded substraction algorithm
+
+def minimum_uncalculated(is_calculated_list):
+    """
+    Find the minimum uncalculated index in the list.
+
+    Parameters
+    ----------
+    is_calculated_list : list
+        List of booleans indicating whether the index has been calculated.
+
+    Returns
+    -------
+    int
+        The minimum uncalculated index.
+    """
+    for i, calculated in enumerate(is_calculated_list):
+        if not calculated:
+            return i
+    return -1  # If all indices are calculated
+
+def fes(set_t, n):
+    """
+    Subtract grandy number sequence of all but Nim.
+
+    Parameters
+    ----------
+    set_t : set
+        Set of integers which are unremovable.
+    n : int
+        The number of stones.
+
+    Returns
+    -------
+    list
+        The list of Grundy numbers.
+    """
+    is_calculated_list = [False] * (n + 1)
+    grandy_numbers = [-1] * (n + 1)
+    m = minimum_uncalculated(is_calculated_list)
+    k = 0
+    is_exist = False
+
+    # indution step
+    while (m != -1):
+        # step1
+        grandy_numbers[m] = k
+        is_calculated_list[m] = True
+
+        # step2
+        for t in set_t:
+            # check if m + t exceeds n
+            if m + t > n:
+                break
+
+            # check if grandy number is already calculated
+            if is_calculated_list[m + t]:
+                continue
+
+            # all search for m_prime < m + t
+            for m_prime in range(0, m + t):
+                if grandy_numbers[m_prime] == k and (m + t - m_prime) not in set_t:
+                    is_exist = True
+                    break
+
+            if not is_exist:
+                # if not exist, set grandy number
+                grandy_numbers[m + t] = k
+                is_calculated_list[m + t] = True
+
+            # reset is_exist for next t
+            is_exist = False
+
+        # update is_calculated_list
+        k += 1
+        m = minimum_uncalculated(is_calculated_list)
+        # is_exist = False
+
+    return grandy_numbers
+
+def main():
+    set_t = {2, 3, 5}
+    n = 14
+    result = fes(set_t, n)
+    for i in range(n + 1):
+        print(f"Grundy number for {i} stones: {result[i]}")
+
+if __name__ == "__main__":
+    main()
+\end{lstlisting}
+
+次に実装した関数の説明を行う。
+
+\subsubsection{minimum\_uncalculated関数}
+\hspace{1em}minimum\_uncalculatedはis\_calculated\_listという各局面のグランディ数が求まっているか否かをTrue、Falseで保存しているリストを引数とした。
+返り値はis\_calculated\_listの中でFalseとなるindexで最小のものである。
+これの関数はFESアルゴリズムで\(\min(\{i\ |\ \mathcal{G}(i)\text{が未確定}\})\)を求める際に使う。
+
+\subsubsection{fes関数}
+\hspace{1em}fes関数では1手で取れない石の数を入れた集合set\_tとAll-but ニムの石の初期値nを引数とし、FESアルゴリズムで求めた各局面のグランディ数のリストを返り値とする関数である。
+\hspace{1em}アルゴリズムは定義\ref{dfn_fes}に沿ってプログラムした。
+
+\subsubsection{実行結果の確認}
+\hspace{1em}以上の関数を使用して、実際に石の初期値が\(14\)個の場合における各局面のグランディ数を求めた結果を求める。
+なお、\(T = \{2, 3, 5\}\)とする。
+
+\begin{lstlisting}[caption={fesの実行結果}, label={output_fes}]
+Grundy number for 0 stones: 0
+Grundy number for 1 stones: 1
+Grundy number for 2 stones: 0
+Grundy number for 3 stones: 1
+Grundy number for 4 stones: 2
+Grundy number for 5 stones: 0
+Grundy number for 6 stones: 1
+Grundy number for 7 stones: 2
+Grundy number for 8 stones: 3
+Grundy number for 9 stones: 2
+Grundy number for 10 stones: 3
+Grundy number for 11 stones: 4
+Grundy number for 12 stones: 5
+Grundy number for 13 stones: 3
+Grundy number for 14 stones: 4
+\end{lstlisting}
+
+これを参考文献\cite{combination_game_theory}p43のグランディ数列と比較すると正しく求まっていることが確認できる。
+
+\begin{thebibliography}{99}
+  \bibitem{combination_game_theory} 安福智明, 坂井公, 末續鴻輝. 組み合わせゲーム理論の世界〜数学で解き明かす必勝法〜, 共立出版株式会社, 2024.
+\end{thebibliography}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+\setcounter{figure}{0}
+\setcounter{table}{0}
+\numberwithin{equation}{section}
+\renewcommand{\thetable}{\Alph{section}\arabic{table}}
+\renewcommand{\thefigure}{\Alph{section}\arabic{figure}}
+%\def\thesection{付録\Alph{section}}
+\makeatletter 
+\newcommand{\section@cntformat}{付録 \thesection:\ }
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    
+\end{document}
