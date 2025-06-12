@@ -44,35 +44,27 @@ def fes(set_t, n):
     # indution step
     while (m != -1):
         # step1
-        print(f"check grandy number {k}")
-        print("-" * 40)
-        print(f"set grandy number for {m} to {k}")
-        print("-" * 40)
         grandy_numbers[m] = k
         is_calculated_list[m] = True
 
         # step2
         for t in set_t:
-            print(f"calculate for {t + m} board with {k} stones")
+            # check if m + t exceeds n
             if m + t > n:
-                print(f"skip {t + m} board, because it is larger than {n}")
                 break
 
+            # check if grandy number is already calculated
             if is_calculated_list[m + t]:
-                print(f"skip {t + m} board, because it is already calculated")
                 continue
 
             # all search for m_prime < m + t
             for m_prime in range(0, m + t):
-                print(f"check transition possibility from {m + t} to {m_prime}")
                 if grandy_numbers[m_prime] == k and (m + t - m_prime) not in set_t:
-                    print("found transition possibility")
                     is_exist = True
                     break
 
             if not is_exist:
                 # if not exist, set grandy number
-                print(f"set grandy number for {m + t} to {k}")
                 grandy_numbers[m + t] = k
                 is_calculated_list[m + t] = True
 
@@ -83,7 +75,6 @@ def fes(set_t, n):
         k += 1
         m = minimum_uncalculated(is_calculated_list)
         # is_exist = False
-        print("-" * 50)
 
     return grandy_numbers
 
