@@ -43,10 +43,11 @@ def calculate_grundy(n):
 
         else: # proceed for the columns
             for j in range(2 * n - i + 1):
+                print(f"check board[{n - j}][{i - n + j}]") # debug output
                 grundy_set = set()
                 # search left, up, and leftUp for Grundy numbers
-                if board[n + 1 - j][i - n + j] != -1:
-                    for k in range(1, n + 1 - j + 1):
+                if board[n - j][i - n + j] == -1:
+                    for k in range(1, n - j + 1):
                         # up
                         if i - j - k >= 0 and board[i - j - k][j] != -1:
                             grundy_set.add(board[i - j - k][j])
@@ -54,7 +55,7 @@ def calculate_grundy(n):
                         # left
                         if j - k >= 0 and board[i - j][j - k] != -1:
                             grundy_set.add(board[i - j][j - k])
-                    for k in range(1, min(n + 1 - j, i - n + j) + 1):
+                    for k in range(1, min(n - j, i - n + j) + 1):
                         # leftUp
                         if i - j - k >= 0 and j - k >= 0 and board[i - j - k][j - k] != -1:
                             grundy_set.add(board[i - j - k][j - k])
@@ -64,7 +65,7 @@ def calculate_grundy(n):
                     while mex in grundy_set:
                         mex += 1
 
-                    board[i - j][j] = mex  # set the Grundy number
+                    board[n - j][i - n + j] = mex  # set the Grundy number
 
     return board
 
