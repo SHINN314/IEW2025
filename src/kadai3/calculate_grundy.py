@@ -75,7 +75,7 @@ def main():
 
     board = calculate_grundy(n)
 
-    print(f"\n{n}x{n} ワイソフのニム盤のグランディ数:\n")
+    print(f"\n{n}x{n} Wythoffニム盤のグランディ数:\n")
 
     # どの数字にも必要な最大の幅を決定
     max_width = 0
