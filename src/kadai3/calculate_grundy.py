@@ -1,6 +1,16 @@
 import is_p_position
 
 def calculate_grundy(n):
+    """
+    Calculate the Grundy numbers for a Wythoff game board of size n x n.
+    
+    Parameters:
+    n (int):
+        The size of the board (n x n).
+    Returns:
+    list:
+        A 2D list representing the Grundy numbers for each position on the board.
+    """
     board = [[-1 for _ in range(n + 1)] for _ in range(n + 1)]
 
     # calculate the Grundy number for P positions
@@ -12,27 +22,21 @@ def calculate_grundy(n):
                 board[i][j] = -1
 
     # calculate the Grundy numbers for non-P positions
-    print("Calculate Grundy numbers")
     for i in range(1, 2 * n + 1):
-        print(f"i = {i}") # debug output
         if i <= n: # proceed for the rows
             for j in range(i + 1):
-                print(f"check board[{i - j}][{j}]") # debug output
                 if board[i - j][j] == -1:
                     grundy_set = set()
                     # search left, up, and leftUp for Grundy numbers
                     for k in range(1, i - j + 1):
                         # up
-                        if k <= n and board[i - j - k][j] != -1:
-                            grundy_set.add(board[i - j - k][j])
+                        grundy_set.add(board[i - j - k][j])
                     for k in range(j + 1):
                         # left
-                        if k <= n and board[i - j][k] != -1:
-                            grundy_set.add(board[i - j][k])
+                        grundy_set.add(board[i - j][k])
                     for k in range(1, min(i - j, j) + 1):
                         # leftUp
-                        if k <= n and board[i - j - k][j - k] != -1:
-                            grundy_set.add(board[i - j - k][j - k])
+                        grundy_set.add(board[i - j - k][j - k])
 
                     # calculate the minimum excludant (mex)
                     mex = 0
@@ -43,22 +47,18 @@ def calculate_grundy(n):
 
         else: # proceed for the columns
             for j in range(2 * n - i + 1):
-                print(f"check board[{n - j}][{i - n + j}]") # debug output
                 grundy_set = set()
                 # search left, up, and leftUp for Grundy numbers
                 if board[n - j][i - n + j] == -1:
                     for k in range(1, n - j + 1):
                         # up
-                        if i - j - k >= 0 and board[i - j - k][j] != -1:
-                            grundy_set.add(board[i - j - k][j])
+                        grundy_set.add(board[n - j - k][i - n + j])
                     for k in range(1, i - n + j + 1):
                         # left
-                        if j - k >= 0 and board[i - j][j - k] != -1:
-                            grundy_set.add(board[i - j][j - k])
+                        grundy_set.add(board[n - j][i - n + j - k])
                     for k in range(1, min(n - j, i - n + j) + 1):
                         # leftUp
-                        if i - j - k >= 0 and j - k >= 0 and board[i - j - k][j - k] != -1:
-                            grundy_set.add(board[i - j - k][j - k])
+                        grundy_set.add(board[n - j - k][i - n + j - k])
 
                     # calculate the minimum excludant (mex)
                     mex = 0
