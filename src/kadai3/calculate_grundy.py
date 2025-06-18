@@ -71,12 +71,27 @@ def calculate_grundy(n):
 
 # test code
 def main():
-    n = int(input("Enter the size of the board (n): "))
+    n = int(input("ボードのサイズ (n) を入力してください: "))
 
     board = calculate_grundy(n)
 
+    print(f"\n{n}x{n} ワイソフのニム盤のグランディ数:\n")
+
+    # どの数字にも必要な最大の幅を決定
+    max_width = 0
     for row in board:
-        print(" ".join(str(x) for x in row))
+        for x in row:
+            max_width = max(max_width, len(str(x)))
+
+    # 列ヘッダーの出力
+    header = "   " + " ".join(f"{j:{max_width}}" for j in range(len(board[0])))
+    print(header)
+    print("---" + " ".join("-" * max_width for _ in range(len(board[0]))))
+
+
+    for i, row in enumerate(board):
+        # 行ヘッダーとフォーマットされた数字の出力
+        print(f"{i:<2}| " + " ".join(f"{x:{max_width}}" for x in row))
 
 if __name__ == "__main__":
     main()
