@@ -6,6 +6,7 @@ def calculate_grundy(n):
     
     Parameters
     ----------
+
     n : int
         The size of the board (n x n).
 
@@ -87,10 +88,9 @@ def main():
             max_width = max(max_width, len(str(x)))
 
     # 列ヘッダーの出力
-    header = "   " + " ".join(f"{j:{max_width}}" for j in range(len(board[0])))
+    header = "   " + " ".join((f"{j:{max_width}}" for j in range(len(board[0]))))
     print(header)
     print("---" + " ".join("-" * max_width for _ in range(len(board[0]))))
-
 
     for i, row in enumerate(board):
         # 行ヘッダーとフォーマットされた数字の出力
