@@ -71,11 +71,11 @@ def calculate_grundy(n):
 
 # test code
 def main():
-    n = int(input("ボードのサイズ (n) を入力してください: "))
+    n = int(input("ボードのサイズ (n + 1) を入力してください: "))
 
     board = calculate_grundy(n)
 
-    print(f"\n{n}x{n} Wythoffニム盤のグランディ数:\n")
+    print(f"\n{n + 1}x{n + 1} Wythoffニム盤のグランディ数:\n")
 
     # どの数字にも必要な最大の幅を決定
     max_width = 0
