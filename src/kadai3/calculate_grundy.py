@@ -17,13 +17,7 @@ def calculate_grundy(n):
     """
     board = [[-1 for _ in range(n + 1)] for _ in range(n + 1)]
 
-    # calculate the Grundy number for P positions
-    for i in range(n + 1):
-        for j in range(n + 1):
-            if is_p_position.is_p_position(i, j):
-                board[i][j] = 0
-            else:
-                board[i][j] = -1
+    board[0][0] = 0
 
     # calculate the Grundy numbers for non-P positions
     for i in range(1, 2 * n + 1):
