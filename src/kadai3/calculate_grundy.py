@@ -8,9 +8,10 @@ def calculate_grundy(n):
     ----------
     n : int
         The size of the board (n x n).
+
     Returns
     -------
-    list: list
+    board: list
         A 2D list representing the Grundy numbers for each position on the board.
     """
     board = [[-1 for _ in range(n + 1)] for _ in range(n + 1)]
