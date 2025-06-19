@@ -4,11 +4,13 @@ def calculate_grundy(n):
     """
     Calculate the Grundy numbers for a Wythoff game board of size n x n.
     
-    Parameters:
-    n (int):
+    Parameters
+    ----------
+    n : int
         The size of the board (n x n).
-    Returns:
-    list:
+    Returns
+    -------
+    list: list
         A 2D list representing the Grundy numbers for each position on the board.
     """
     board = [[-1 for _ in range(n + 1)] for _ in range(n + 1)]
