@@ -14,5 +14,15 @@ class Node:
         self.right_children.append(child)
         child.parent = self
 
+    def set_right_children(self, children):
+        self.right_children = children
+        for child in children:
+            child.parent = self
+
+    def set_left_children(self, children):
+        self.left_children = children
+        for child in children:
+            child.parent = self
+
     def __str__(self):
         return f"Node(name=`{self.name}`, left_children={len(self.left_children)}, right_children={len(self.right_children)})"

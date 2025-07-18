@@ -195,11 +195,54 @@ class GameTree:
         
         return root
 
+    def _negate_game(self, node):
+        """
+        ゲーム局面を反転させる操作
+        左右の子を入れ替え、再帰的に子ノードも反転する
+        0は反転しても0のまま（基底ケース）
+        """
+        if node is None:
+            return None
+        
+        # 0は反転しても0のまま
+        if node.name == "0":
+            return Node("0")
+        
+        # 新しいノードを作成（名前に-を付ける）
+        negated_node = Node(f"-{node.name}")
+        
+        # 左右を入れ替えて再帰的に反転
+        negated_left_children = []
+        negated_right_children = []
+        
+        # 元の右の子 → 新しい左の子
+        for right_child in node.right_children:
+            negated_left = self._negate_game(right_child)
+            negated_left_children.append(negated_left)
+        
+        # 元の左の子 → 新しい右の子
+        for left_child in node.left_children:
+            negated_right = self._negate_game(left_child)
+            negated_right_children.append(negated_right)
+        
+        # setメソッドを使用して子ノードを設定
+        negated_node.set_left_children(negated_left_children)
+        negated_node.set_right_children(negated_right_children)
+        
+        return negated_node
+
     def parse_game(self, game_string):
         """
         ゲームの文字列表現を再帰的に解析し、Nodeオブジェクトの木構造を返す。
         """
         game_string = game_string.strip()
+
+        # parse negation (-ゲーム)
+        if game_string.startswith('-'):
+            # -を除いた部分をパースしてから反転
+            inner_game_string = game_string[1:].strip()
+            inner_node = self.parse_game(inner_game_string)
+            return self._negate_game(inner_node)
 
         # parse *k
         if game_string.startswith('*'):
