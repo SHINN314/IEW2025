@@ -40,12 +40,74 @@ class GameTree:
             
         return options
 
+    def _parse_nim_value(self, k):
+        """
+        parse *k method
+        *k = {*0,*1,...,*(k-1) | *0,*1,...,*(k-1)}
+        *0 = 0 = { | }
+        """
+        if k == 0:
+            # base case
+            return Node("{ | }")
+        
+        root = Node(f"*{k}")
+
+        # left choices
+        for i in range(k):
+            left_child = self._parse_nim_value(i)
+            root.add_left_child(left_child)
+
+        # right choices
+        for i in range(k):
+            right_child = self._parse_nim_value(i)
+            root.add_right_child(right_child)
+        
+        return root
+    
+    def _parse_up(self):
+        root = Node("↑")
+
+        left_chiled = Node("{ | }")
+        root.add_left_child(left_chiled)
+
+        right_chiled = self._parse_nim_value(1)
+        root.add_right_child(right_chiled)
+
+        return root
+    
+    def _parse_down(self):
+        root = Node("↓")
+
+        left_chiled = self._parse_nim_value(1)
+        root.add_left_child(left_chiled)
+
+        right_chiled = Node("{ | }")
+        root.add_right_child(right_chiled)
+
+        return root
+
     def parse_game(self, game_string):
         """
         ゲームの文字列表現を再帰的に解析し、Nodeオブジェクトの木構造を返す。
         """
         game_string = game_string.strip()
         print(f"Parsing game string: '{game_string}'")
+
+        # parse *k
+        if game_string.startswith('*'):
+            try:
+                k = int(game_string[1:])
+                return self._parse_nim_value(k)
+            except ValueError:
+                raise ValueError(f"Invalid nim value format: '{game_string}'")
+            
+        # parse ↑
+        if game_string == "↑":
+            return self._parse_up()
+        
+        # parse ↓
+        if game_string == "↓":
+            return self._parse_down()
 
         # base case
         if game_string == "0":
@@ -57,7 +119,7 @@ class GameTree:
         root = Node(game_string)
         content = game_string[1:-1].strip()
         
-        # "|" がない場合 (例: "{ }") は空のゲームとして扱う
+        # if content == "":
         if not content:
             return root
 
