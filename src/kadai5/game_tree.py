@@ -93,6 +93,12 @@ class GameTree:
         game_string = game_string.strip()
         print(f"Parsing game string: '{game_string}'")
 
+        # base case
+        if game_string == "0":
+            return Node("{ | }")
+        if not game_string.startswith('{') or not game_string.endswith('}'):
+            raise ValueError(f"Invalid game format: '{game_string}' does not start with '{{' or end with '}}'")
+
         # parse *k
         if game_string.startswith('*'):
             try:
@@ -108,12 +114,6 @@ class GameTree:
         # parse ↓
         if game_string == "↓":
             return self._parse_down()
-
-        # base case
-        if game_string == "0":
-            return Node("{ | }")
-        if not game_string.startswith('{') or not game_string.endswith('}'):
-            raise ValueError(f"Invalid game format: '{game_string}' does not start with '{{' or end with '}}'")
 
         # recurrent case
         root = Node(game_string)
