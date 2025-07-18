@@ -145,4 +145,3 @@ class GameTree:
         self.generate_dot_graph(filename)
         
         print("\n" + "=" * 60)
-
