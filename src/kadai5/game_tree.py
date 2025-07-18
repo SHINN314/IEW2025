@@ -48,7 +48,7 @@ class GameTree:
         """
         if k == 0:
             # base case
-            return Node("{ | }")
+            return Node("0")
         
         root = Node(f"*{k}")
 
@@ -67,13 +67,24 @@ class GameTree:
     def _parse_up(self):
         root = Node("↑")
 
-        left_chiled = Node("{ | }")
+        left_chiled = Node("0")
         root.add_left_child(left_chiled)
 
         right_chiled = self._parse_nim_value(1)
         root.add_right_child(right_chiled)
 
         return root
+
+    def _parse_sum_n_up_and_star(self, n):
+        if n == 1:
+            game_tree = "{0, * | 0}"
+            root = self.parse_game(game_tree)
+            return root
+
+    def _parse_n_up(self, n):
+        if n == 1:
+            return self._parse_up()
+        
     
     def _parse_down(self):
         root = Node("↓")
@@ -81,9 +92,107 @@ class GameTree:
         left_chiled = self._parse_nim_value(1)
         root.add_left_child(left_chiled)
 
-        right_chiled = Node("{ | }")
+        right_chiled = Node("0")
         root.add_right_child(right_chiled)
 
+        return root
+
+    def _parse_n_up_times(self, game_string):
+        """
+        n × ↑ 形式をパースする
+        n × ↑ = {0 | (n-1) × ↑ + *}
+        """
+        # "n × ↑" から n を抽出
+        parts = game_string.split('×')
+        if len(parts) != 2:
+            raise ValueError(f"Invalid n × ↑ format: '{game_string}'")
+        
+        try:
+            n = int(parts[0].strip())
+        except ValueError:
+            raise ValueError(f"Invalid number in n × ↑ format: '{parts[0].strip()}'")
+        
+        if n == 1:
+            return self._parse_up()
+        
+        root = Node(f"{n} × ↑")
+        
+        # 左側: 0
+        left_child = Node("0")
+        root.add_left_child(left_child)
+        
+        # 右側: (n-1) × ↑ + *
+        if n - 1 == 1:
+            # 基底ケース: ↑ + * = {0, * | 0}
+            right_child = self._parse_up_plus_star_base()
+        else:
+            right_child = self._parse_n_up_plus_star_from_n(n - 1)
+        root.add_right_child(right_child)
+        
+        return root
+
+    def _parse_n_up_plus_star(self, game_string):
+        """
+        n × ↑ + * 形式をパースする
+        n × ↑ + * = {0 | (n - 1) × ↑}
+        ↑ + * = {0, * | 0} (基底ケース)
+        """
+        # "n × ↑ + *" から n を抽出
+        parts = game_string.split('×')
+        if len(parts) != 2:
+            raise ValueError(f"Invalid n × ↑ + * format: '{game_string}'")
+        
+        try:
+            n = int(parts[0].strip())
+        except ValueError:
+            raise ValueError(f"Invalid number in n × ↑ + * format: '{parts[0].strip()}'")
+        
+        return self._parse_n_up_plus_star_from_n(n)
+
+    def _parse_n_up_plus_star_from_n(self, n):
+        """
+        n × ↑ + * を数値 n から構築する
+        """
+        if n == 1:
+            # 基底ケース: ↑ + * = {0, * | 0}
+            return self._parse_up_plus_star_base()
+        
+        root = Node(f"{n} × ↑ + *")
+        
+        # 左側: 0
+        left_child = Node("0")
+        root.add_left_child(left_child)
+        
+        # 右側: (n - 1) × ↑
+        if n - 1 == 1:
+            right_child = self._parse_up()
+        else:
+            right_child = Node(f"{n - 1} × ↑")
+            # (n - 1) × ↑ の子ノードを再帰的に構築
+            temp_game_tree = GameTree()
+            temp_node = temp_game_tree._parse_n_up_times(f"{n - 1} × ↑")
+            right_child.left_children = temp_node.left_children
+            right_child.right_children = temp_node.right_children
+        root.add_right_child(right_child)
+        
+        return root
+
+    def _parse_up_plus_star_base(self):
+        """
+        基底ケース: ↑ + * = {0, * | 0}
+        """
+        root = Node("↑ + *")
+        
+        # 左側: 0, *
+        left_child_0 = Node("0")
+        left_child_star = self._parse_nim_value(1)
+        root.add_left_child(left_child_0)
+        root.add_left_child(left_child_star)
+        
+        # 右側: 0
+        right_child = Node("0")
+        root.add_right_child(right_child)
+        
         return root
 
     def parse_game(self, game_string):
@@ -91,13 +200,6 @@ class GameTree:
         ゲームの文字列表現を再帰的に解析し、Nodeオブジェクトの木構造を返す。
         """
         game_string = game_string.strip()
-        print(f"Parsing game string: '{game_string}'")
-
-        # base case
-        if game_string == "0":
-            return Node("{ | }")
-        if not game_string.startswith('{') or not game_string.endswith('}'):
-            raise ValueError(f"Invalid game format: '{game_string}' does not start with '{{' or end with '}}'")
 
         # parse *k
         if game_string.startswith('*'):
@@ -106,6 +208,14 @@ class GameTree:
                 return self._parse_nim_value(k)
             except ValueError:
                 raise ValueError(f"Invalid nim value format: '{game_string}'")
+        
+        # parse n × ↑ + *
+        if '×' in game_string and '↑' in game_string and '+' in game_string and '*' in game_string:
+            return self._parse_n_up_plus_star(game_string)
+        
+        # parse n × ↑
+        if '×' in game_string and '↑' in game_string:
+            return self._parse_n_up_times(game_string)
             
         # parse ↑
         if game_string == "↑":
@@ -114,6 +224,12 @@ class GameTree:
         # parse ↓
         if game_string == "↓":
             return self._parse_down()
+
+        # base case
+        if game_string == "0":
+            return Node("0")
+        if not game_string.startswith('{') or not game_string.endswith('}'):
+            raise ValueError(f"Invalid game format: '{game_string}' does not start with '{{' or end with '}}'")
 
         # recurrent case
         root = Node(game_string)

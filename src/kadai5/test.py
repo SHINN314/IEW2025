@@ -1,5 +1,10 @@
 from game_tree import GameTree
 
+def test_sum_n_up_and_star():
+    game_tree = GameTree()
+    game_tree.set_root_node(game_tree._parse_sum_n_up_and_star(1))
+    game_tree.print_tree(game_tree.root_node)
+
 
 def main():
     game_tree = GameTree()
