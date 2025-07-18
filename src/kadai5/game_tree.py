@@ -1,6 +1,6 @@
 import collections
 from node import Node
-from parse_methods import GameParser
+from parse_methods import GameParser, TreeVisualizer
 
 
 class GameTree:
@@ -89,4 +89,60 @@ class GameTree:
         for i, right_child in enumerate(node.right_children):
             is_last_right = (i == len(node.right_children) - 1)
             self.print_tree(right_child, new_prefix, is_last_right, is_left=False)
+    
+    def print_tree_enhanced(self):
+        """改良された見やすい形式で木構造を表示"""
+        if self.root_node is None:
+            print("❌ No tree to display")
+            return
+        TreeVisualizer.print_tree_enhanced(self.root_node)
+    
+    def print_tree_compact(self):
+        """コンパクトな形式で木構造を表示"""
+        if self.root_node is None:
+            print("❌ No tree to display")
+            return
+        TreeVisualizer.print_tree_compact(self.root_node)
+    
+    def generate_dot_graph(self, filename="game_tree", keep_dot=False):
+        """DOT形式のグラフファイルを生成し、PNGに変換"""
+        if self.root_node is None:
+            print("❌ No tree to generate")
+            return None
+        return TreeVisualizer.generate_dot_graph(self.root_node, filename, keep_dot)
+    
+    def print_game_notation(self):
+        """ゲーム記法で表示"""
+        if self.root_node is None:
+            print("❌ No tree to display")
+            return
+        TreeVisualizer.print_game_notation(self.root_node)
+    
+    def display_all_formats(self, filename="game_tree"):
+        """すべての表示形式で木構造を出力"""
+        if self.root_node is None:
+            print("❌ No tree to display")
+            return
+        
+        print("=" * 60)
+        print("🌳 GAME TREE VISUALIZATION")
+        print("=" * 60)
+        
+        print("\n1️⃣ ENHANCED TREE VIEW:")
+        print("-" * 30)
+        self.print_tree_enhanced()
+        
+        print("\n2️⃣ COMPACT TREE VIEW:")
+        print("-" * 30)
+        self.print_tree_compact()
+        
+        print("\n3️⃣ GAME NOTATION:")
+        print("-" * 30)
+        self.print_game_notation()
+        
+        print("\n4️⃣ GRAPH GENERATION:")
+        print("-" * 30)
+        self.generate_dot_graph(filename)
+        
+        print("\n" + "=" * 60)
 

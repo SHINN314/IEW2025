@@ -276,3 +276,203 @@ class GameParser:
         
         # 右の子: なし（空）
         return root
+
+
+class TreeVisualizer:
+    """ゲーム木の可視化を行うクラス"""
+    
+    @staticmethod
+    def print_tree_enhanced(node, prefix="", is_last=True, is_left=None, level=0):
+        """
+        改良されたテキスト形式での木構造表示
+        """
+        if node is None: 
+            return
+        
+        # インデントと接続線の設定
+        if level == 0:
+            # ルートノード
+            print(f"🎯 ROOT: {node.name}")
+        else:
+            # 子ノード
+            connector = "└── " if is_last else "├── "
+            side_indicator = "⬅️ LEFT" if is_left else "➡️ RIGHT"
+            print(f"{prefix}{connector}{side_indicator}: {node.name}")
+        
+        # 子ノードの前置詞を決定
+        new_prefix = prefix + ("    " if is_last else "│   ")
+        
+        # 左右の子ノードの総数を取得
+        total_children = len(node.left_children) + len(node.right_children)
+        current_child_index = 0
+        
+        # 左の子ノードを表示
+        for i, left_child in enumerate(node.left_children):
+            is_last_child = (current_child_index == total_children - 1)
+            TreeVisualizer.print_tree_enhanced(
+                left_child, new_prefix, is_last_child, is_left=True, level=level+1
+            )
+            current_child_index += 1
+        
+        # 右の子ノードを表示
+        for i, right_child in enumerate(node.right_children):
+            is_last_child = (current_child_index == total_children - 1)
+            TreeVisualizer.print_tree_enhanced(
+                right_child, new_prefix, is_last_child, is_left=False, level=level+1
+            )
+            current_child_index += 1
+    
+    @staticmethod
+    def print_tree_compact(node):
+        """
+        コンパクトな形式での木構造表示
+        """
+        def format_node_compact(node, depth=0):
+            if node is None:
+                return ""
+            
+            indent = "  " * depth
+            result = f"{indent}{node.name}\n"
+            
+            # 左の子を表示
+            if node.left_children:
+                result += f"{indent}├─ LEFT:\n"
+                for child in node.left_children:
+                    result += format_node_compact(child, depth + 2)
+            
+            # 右の子を表示
+            if node.right_children:
+                result += f"{indent}└─ RIGHT:\n"
+                for child in node.right_children:
+                    result += format_node_compact(child, depth + 2)
+            
+            return result
+        
+        print("📊 COMPACT TREE VIEW:")
+        print(format_node_compact(node))
+    
+    @staticmethod
+    def generate_dot_graph(node, filename="game_tree", keep_dot=False):
+        """
+        DOT形式のグラフを生成し、直接PNGに変換
+        """
+        import subprocess
+        import os
+        
+        dot_content = ["digraph GameTree {"]
+        dot_content.append("  rankdir=TB;")
+        dot_content.append("  node [shape=box, style=rounded];")
+        
+        node_counter = [0]  # カウンターを参照渡しで使用
+        
+        def add_node_to_dot(node, parent_id=None, is_left=None):
+            if node is None:
+                return
+            
+            current_id = f"node{node_counter[0]}"
+            node_counter[0] += 1
+            
+            # ノードのラベルと色を設定
+            label = node.name.replace('"', '\\"')
+            color = "#E3F2FD"  # デフォルト色
+            
+            if node.name == "0":
+                color = "#FFEBEE"  # 薄い赤
+            elif node.name.startswith("*"):
+                color = "#E8F5E8"  # 薄い緑
+            elif node.name in ["↑", "↓"]:
+                color = "#FFF3E0"  # 薄いオレンジ
+            
+            dot_content.append(f'  {current_id} [label="{label}", fillcolor="{color}", style=filled];')
+            
+            # 親ノードとの接続
+            if parent_id is not None:
+                edge_label = "LEFT" if is_left else "RIGHT"
+                edge_color = "blue" if is_left else "red"
+                dot_content.append(f'  {parent_id} -> {current_id} [label="{edge_label}", color={edge_color}];')
+            
+            # 左の子ノードを追加
+            for child in node.left_children:
+                add_node_to_dot(child, current_id, is_left=True)
+            
+            # 右の子ノードを追加
+            for child in node.right_children:
+                add_node_to_dot(child, current_id, is_left=False)
+        
+        add_node_to_dot(node)
+        dot_content.append("}")
+        
+        # DOTファイルに書き込み
+        dot_filename = f"{filename}.dot"
+        png_filename = f"{filename}.png"
+        
+        with open(dot_filename, 'w', encoding='utf-8') as f:
+            f.write('\n'.join(dot_content))
+        
+        print(f"📈 DOT file generated: {dot_filename}")
+        
+        # Graphvizでpngに変換
+        try:
+            result = subprocess.run([
+                'dot', '-Tpng', dot_filename, '-o', png_filename
+            ], capture_output=True, text=True, check=True)
+            
+            print(f"🖼️  PNG image generated: {png_filename}")
+            
+            # DOTファイルを削除（オプション）
+            if os.path.exists(png_filename) and not keep_dot:
+                try:
+                    os.remove(dot_filename)
+                    print(f"🗑️  Temporary DOT file removed: {dot_filename}")
+                except OSError:
+                    pass
+            elif keep_dot:
+                print(f"💾 DOT file kept: {dot_filename}")
+            
+            return png_filename
+            
+        except subprocess.CalledProcessError as e:
+            print(f"❌ Error converting DOT to PNG: {e}")
+            print("⚠️  Please make sure Graphviz is installed:")
+            print("   Ubuntu/Debian: sudo apt install graphviz")
+            print("   macOS: brew install graphviz")
+            print("   Windows: Download from https://graphviz.org/download/")
+            return dot_filename
+            
+        except FileNotFoundError:
+            print("❌ Graphviz 'dot' command not found!")
+            print("⚠️  Please install Graphviz:")
+            print("   Ubuntu/Debian: sudo apt install graphviz")
+            print("   macOS: brew install graphviz") 
+            print("   Windows: Download from https://graphviz.org/download/")
+            return dot_filename
+    
+    @staticmethod
+    def print_game_notation(node):
+        """
+        ゲーム記法での表示
+        """
+        def format_game_notation(node):
+            if node is None:
+                return ""
+            
+            if node.name == "0":
+                return "0"
+            
+            # 左右の子をゲーム記法で表現
+            left_parts = []
+            right_parts = []
+            
+            for child in node.left_children:
+                left_parts.append(format_game_notation(child))
+            
+            for child in node.right_children:
+                right_parts.append(format_game_notation(child))
+            
+            left_str = ", ".join(left_parts) if left_parts else ""
+            right_str = ", ".join(right_parts) if right_parts else ""
+            
+            return f"{{{left_str} | {right_str}}}"
+        
+        notation = format_game_notation(node)
+        print(f"🎮 GAME NOTATION: {notation}")
