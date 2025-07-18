@@ -1,0 +1,213 @@
+\documentclass[uplatex,dvipdfmx,a4paper,10pt]{jsarticle}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{latexsym}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage[separate-uncertainty]{siunitx}
+\usepackage{physics}
+\usepackage{enumerate}
+\usepackage{bm}
+\usepackage{pdfpages}
+\usepackage{pxchfon}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{amssymb}
+
+% lstlistingのsetting
+\lstset{
+    basicstyle={\ttfamily},
+    identifierstyle={\small},
+    commentstyle={\smallitshape},
+    keywordstyle={\small\bfseries},
+    ndkeywordstyle={\small},
+    stringstyle={\small\ttfamily},
+    frame={tb},
+    breaklines=true,
+    columns=[l]{fullflexible},
+    numbers=left,
+    xrightmargin=0zw,
+    xleftmargin=3zw,
+    numberstyle={\scriptsize},
+    stepnumber=1,
+    numbersep=1zw,
+    lineskip=-0.5ex
+}
+
+% tikz setting
+\usepackage{tikz}
+\usetikzlibrary{automata, intersections, calc, arrows, positioning, arrows.meta}
+
+% theories setting (for japanese language)
+\usepackage{amsmath}
+\usepackage{amsthm}
+
+\theoremstyle{definition}
+\newtheorem{thm}{定理}[section]
+\newtheorem{lem}[thm]{補題}
+\newtheorem{prop}[thm]{命題}
+\newtheorem{cor}[thm]{系}
+\newtheorem{ass}[thm]{仮定}
+\newtheorem{conj}[thm]{予想}
+\newtheorem{dfn}[thm]{定義}
+\newtheorem{rem}[thm]{注}
+
+\newtheorem*{thm*}{定理}
+\newtheorem*{lem*}{補題}
+\newtheorem*{prop*}{命題}
+\newtheorem*{cor*}{系}
+\newtheorem*{ass*}{仮定}
+\newtheorem*{conj*}{予想}
+\newtheorem*{dfn*}{定義}
+\newtheorem*{rem*}{注}
+
+% \renewcommand{\rmdefault}{pplj}
+% \renewcommand{\sfdefault}{phv}
+
+\setlength{\textwidth}{165mm} %165mm-marginparwidth
+\setlength{\marginparwidth}{40mm}
+\setlength{\textheight}{225mm}
+\setlength{\topmargin}{-5mm}
+\setlength{\oddsidemargin}{-3.5mm}
+% \setlength{\parindent}{0pt}
+
+\def\vector#1{\mbox{\boldmath $#1$}}
+\newcommand{\AmSLaTeX}{%
+ $\mathcal A$\lower.4ex\hbox{$\!\mathcal M\!$}$\mathcal S$-\LaTeX}
+\newcommand{\PS}{{\scshape Post\-Script}}
+\def\BibTeX{{\rmfamily B\kern-.05em{\scshape i\kern-.025em b}\kern-.08em
+ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125em X}}
+\newcommand{\DeLta}{{\mit\Delta}}
+\renewcommand{\d}{{\rm d}}
+\def\wcaption#1{\caption[]{\parbox[t]{100mm}{#1}}}
+\def\rm#1{\mathrm{#1}}
+\def\tempC{^\circ \rm{C}}
+
+\makeatletter
+\def\section{\@startsection {section}{1}{\z@}{-3.5ex plus -1ex minus -.2ex}{2.3ex plus .2ex}{\Large\bf}}
+\def\subsection{\@startsection {subsection}{2}{\z@}{-3.25ex plus -1ex minus -.2ex}{1.5ex plus .2ex}{\normalsize\bf}}
+\def\subsubsection{\@startsection {subsubsection}{3}{\z@}{-3.25ex plus -1ex minus -.2ex}{1.5ex plus .2ex}{\small\bf}}
+\makeatother
+
+\makeatletter
+\def\@seccntformat#1{\@ifundefined{#1@cntformat}%
+   {\csname the#1\endcsname\quad}%      default
+   {\csname #1@cntformat\endcsname}%    enable individual control
+}
+
+% proof enviroment
+\renewenvironment{proof}[1][\proofname]{\par
+  \pushQED{\qed}%
+  \normalfont \topsep6\p@\@plus6\p@\relax
+  \trivlist
+  \item\relax
+  {\bfseries
+  #1\@addpunct{.}}\hspace\labelsep\ignorespaces
+}{%
+  \popQED\endtrivlist\@endpefalse
+}
+\makeatother
+
+\newcommand{\tenexp}[2]{#1\times10^{#2}}
+
+
+\begin{document}
+% タイトル
+\begin{center}
+{\Large{\bf 情報工学工房第4回レポート}} \\
+{\bf 電気通信大学 Ⅰ類 コンピュータサイエンスプログラム 3年} \\
+{\bf 2311081 木村慎之介} \\
+\end{center}
+
+\section{局面の大小関係の半順序性}
+\hspace{1em}本レポートではゲームの局面の大小関係について、関係が半順序性を満たすか調べた。\\
+\hspace{1em}まず、非不偏ゲームにおける局面の大小関係の定義を述べる。
+そのために、帰結類の定義とハッセ図を用いた帰結類同士の順序関係についておさらいする。
+
+\begin{dfn}[局面の帰結類]
+局面の帰結類とは次の4つの局面の集合族\(\mathcal{P}, \mathcal{N}, \mathcal{L}, \mathcal{R}\)のことを指す。
+\begin{itemize}
+  \item \(\mathcal{P}\): 後手に必勝戦略のあるゲームの局面の集合
+  \item \(\mathcal{N}\): 先手に必勝戦略のあるゲームの局面の集合
+  \item \(\mathcal{L}\): 左に必勝戦略のあるゲーム
+  \item \(\mathcal{R}\): 右に必勝戦略のあるゲーム
+\end{itemize}
+また、これらの帰結類同士の半順序関係は以下のハッセ図のように定義される。
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \node (L) {\(\mathcal{L}\)};
+    \node[below left = 0.5cm and 0.5cm of L] (N) {\(\mathcal{N}\)};
+    \node[below right = 0.5cm and 0.5cm of L] (P) {\(\mathcal{P}\)};
+    \node[below = 1.5cm of L] (R) {\(\mathcal{R}\)};
+
+    \draw (L) -- (N);
+    \draw (L) -- (P);
+    \draw (N) -- (R);
+    \draw (P) -- (R);
+  \end{tikzpicture}
+  \caption{帰結類のハッセ図}
+  \label{figure_outcom_class_hasse_diagram}
+\end{figure}
+\label{dfn_outcom_classese}
+\end{dfn}
+
+なお、参考文献\cite{combination_game_theory}では別の定義のされ方をしていたが、わかりやすさのために今回はこの定義を採用した。
+
+\begin{dfn}[局面の大小関係] 
+2つの局面\(G, H\)について、\(G \geq H\)を次のように定義する。
+すなわち、任意の局面\(X\)について
+
+\begin{equation}
+  o(G + X) \geq o(H + X)
+\end{equation}
+
+\noindent が成立する時、\(G \geq H\)と定める。
+ただし、\(o\)はゲームの局面を引数として受け取り、その局面が属する帰結類を返す写像であることに注意する。
+\label{dfn_comparision_game}
+\end{dfn}
+
+次に、局面の大小関係に半順序性があることを証明する。
+
+\begin{proof}[半順序性の証明] \\
+  \hspace{1em}まず反射律を示す。
+  局面\(G\)を任意に一つ選んできた時\(G = G\)であるから\(G \leq G\)が成立する。 \\
+  \hspace{1em}次に反対称律を示す。
+  任意に2つの局面\(G, H\)を選び\(G \leq H\)かつ\(H \leq G\)を仮定する。
+  この仮定は\(\forall X, o(G + X) \geq o(H + X)\)かつ\(\forall Y, o(H + Y) \geq o(G + Y)\)と同値である。
+  さて、局面\(Z\)を任意に取ってきた時に仮定から\(o(G + Z) \geq o(H + Z)\)かつ\(o(H + Z) \geq o(G + Z)\)を満たすので、帰結類の半順序性から\(o(G + Z) = o(H + Z)\)を満たす。
+  これは反対称律に他ならない。 \\
+  \hspace{1em}最後に推移律を示す。
+  任意に3つの局面\(G, H, I\)をとってきて、\(G \geq H\)かつ\(H \geq I\)を仮定する。
+  この仮定は\(\forall X, o(G + X) \geq o(H + X)\)かつ\(\forall Y, o(H + Y) \geq o(I + Y)\)と同値である。
+  さて、局面\(Z\)を任意に取ってきたとき、仮定より\(o(G + Z) \geq o(H + Z)\)かつ\(o(H + Z) \geq o(I + Z)\)が成立する。
+  そして帰結類の半順序性より\(o(G + Z) \geq o(I + Z)\)となる。
+  これは推移律にほかならない。 \\
+  \hspace{1em}以上より局面の大小が半順序関係を持つことが証明された。
+  \label{proof_partial_order}
+\end{proof}
+
+なお、\(\geq\)の否定を示す関係\(|▷\)については、関係を満たす集合\(\{(G, H) | G > H \text{または} G || H\}\)に\((G, G)\)が属さないことから半順序性が成立しないことが直ちに示される。
+ただし、記号\(||\)は2つの局面\(G, H\)について、大小を判定することができないということを表す。
+
+\begin{thebibliography}{99}
+  \bibitem{combination_game_theory} 安福智明, 坂井公, 末續鴻輝. 組み合わせゲーム理論の世界〜数学で解き明かす必勝法〜, 共立出版株式会社, 2024.
+\end{thebibliography}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+\setcounter{figure}{0}
+\setcounter{table}{0}
+\numberwithin{equation}{section}
+\renewcommand{\thetable}{\Alph{section}\arabic{table}}
+\renewcommand{\thefigure}{\Alph{section}\arabic{figure}}
+%\def\thesection{付録\Alph{section}}
+\makeatletter 
+\newcommand{\section@cntformat}{付録 \thesection:\ }
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    
+\end{document}
