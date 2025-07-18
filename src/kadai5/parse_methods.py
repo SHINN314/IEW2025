@@ -254,3 +254,25 @@ class GameParser:
             root.set_right_children(right_children)
 
         return root
+    
+    @staticmethod
+    def create_integer_node(n, parse_func):
+        """
+        整数nに対応するゲーム木を作成
+        n = {n-1 | } (n > 0)
+        0 = { | } (基底ケース)
+        """
+        if n == 0:
+            return Node("0")
+        
+        if n < 0:
+            raise ValueError(f"Negative integers are not supported: {n}")
+        
+        root = Node(str(n))
+        
+        # 左の子: n-1
+        left_child = GameParser.create_integer_node(n - 1, parse_func)
+        root.add_left_child(left_child)
+        
+        # 右の子: なし（空）
+        return root
