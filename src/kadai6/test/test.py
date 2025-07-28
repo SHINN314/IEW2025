@@ -24,15 +24,16 @@ def main():
         print(f"❌ Unexpected error: {e}")
 
     # initialize Grundy numbers
-    grundy_numbers = roopy_grundy.initialize_grundy_numbers(game_graph)
+    try:
+        grundy_numbers = roopy_grundy.initialize_grundy_numbers(game_graph)
 
-    # display initial Grundy numbers
-    print("Initial Grundy numbers:")
-    for i, g in enumerate(grundy_numbers):
-        print(f"Node {i}: {g}")
+        # display initialized Grundy numbers
+        print("✅ Grundy numbers initialized:")
+        for node_id, grundy_number in enumerate(grundy_numbers):
+            print(f"Node {node_id}: Grundy number = {grundy_number}")
 
-    # calculate Grundy numbers
-    
+    except Exception as e:
+        print(f"❌ Error initializing Grundy numbers: {e}")
 
 if __name__ == "__main__":
     main()
