@@ -29,6 +29,9 @@ class GameGraph():
         self.nodes = new_nodes
         self.total_nodes = len(new_nodes)
 
+    def get_nodes(self):
+        return self.nodes
+
     def load_from_file(self, file_path):
         """
         Load graph from file where each line format is 'node_id: adjacent_node1 adjacent_node2 ...'.
