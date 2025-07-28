@@ -51,5 +51,5 @@ def calculate_n_grundy_number(game_graph: GameGraph, node, grundy_numbers):
                 if not is_exist_next_next_node:
                     return float("inf")
                     
-        return m_n(node)
+        return node_m_n
     
