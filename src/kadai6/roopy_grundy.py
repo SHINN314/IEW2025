@@ -34,11 +34,22 @@ def m_n(game_graph: GameGraph, node, grundy_numbers):
     return mex(adj_grundy_set)
 
 
-def calculate_n_grundy_number(game_graph: GameGraph, node, grundy_numbers):
+def calculate_n_grundy_number(game_graph: GameGraph, node, grundy_numbers):    
     if grundy_numbers[node] != float("inf"):
         return grundy_numbers[node]
     else:
+        node_m_n = m_n(game_graph, node, grundy_numbers)
+
         for next_node in game_graph.nodes[node]:
-            if grundy_numbers[next_node] > m_n(game_graph, node):
-                continue
+            if grundy_numbers[next_node] > node_m_n:
+                is_exist_next_next_node = False
+                for next_next_node in game_graph.nodes[next_node]:
+                    if grundy_numbers[next_next_node] == node_m_n:
+                        is_exist_next_next_node = True # update is_exist_next_next_node
+                        break
+                
+                if not is_exist_next_next_node:
+                    return float("inf")
+                    
+        return m_n(node)
     
