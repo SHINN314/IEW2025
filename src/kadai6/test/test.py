@@ -46,11 +46,11 @@ def main():
     except Exception as e:
         print(f"Error calculating m_n: {e}")
 
-    # calculate n_grundy_number
+    # calculate grundy numbers
     print(f"----- calculate grundy number -----")
     try:
-        new_grundy_numbers = roopy_grundy.calculate_n_grundy_numbers(game_graph, grundy_numbers)
-        for node, grundy_number in enumerate(new_grundy_numbers):
+        grundy_numbers = roopy_grundy.calculate_grundy_numbers(game_graph)
+        for node, grundy_number in enumerate(grundy_numbers):
             print(f"Node {node}: grundy number = {grundy_number}")
     except Exception as e:
         print(f"Error calculating grundy number: {e}")
