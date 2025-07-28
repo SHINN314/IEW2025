@@ -43,6 +43,7 @@ def calculate_n_grundy_number(game_graph: GameGraph, node, grundy_numbers):
         for next_node in game_graph.nodes[node]:
             if grundy_numbers[next_node] > node_m_n:
                 is_exist_next_next_node = False
+
                 for next_next_node in game_graph.nodes[next_node]:
                     if grundy_numbers[next_next_node] == node_m_n:
                         is_exist_next_next_node = True # update is_exist_next_next_node
@@ -52,4 +53,12 @@ def calculate_n_grundy_number(game_graph: GameGraph, node, grundy_numbers):
                     return float("inf")
                     
         return node_m_n
+    
+def calculate_n_grundy_numbers(game_graph: GameGraph, grundy_numbers):
+    # initialize new grundy_numbers
+    new_grundy_numbers = []
+
+    for node, _ in enumerate(game_graph.nodes):
+        grundy_number = calculate_n_grundy_number(game_graph, node, grundy_numbers)
+        new_grundy_numbers.append(grundy_number)
     
