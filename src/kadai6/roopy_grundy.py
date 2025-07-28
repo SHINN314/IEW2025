@@ -76,7 +76,6 @@ def m_n(game_graph: GameGraph, node, grundy_numbers):
     # calculate mex
     return mex(adj_grundy_set)
 
-
 def calculate_n_grundy_number(game_graph: GameGraph, node, grundy_numbers):
     """
     Calculate the Grundy number for a single node using the loopy Grundy algorithm.
