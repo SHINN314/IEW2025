@@ -15,10 +15,21 @@ def main():
 
     # calculate next node list
     try:
-        nodes = nim_generator.draw_edges(x, y)
-        print(f"Node {node}: Adjacency list {nodes}")
+        node_adj = nim_generator.draw_edges(x, y)
+        print(f"Node {node}: Adjacency list {node_adj}")
     except Exception as e:
         print(e)
+
+    # construct three hold nim game graph
+    try:
+        stone_num = int(input("Choose initialize stone of three hold nim game: "))
+        nodes = nim_generator.construct_three_hold_nim_graph(stone_num)
+
+        for node, node_adj in enumerate(nodes):
+            print(f"Node {node}: Adfacency list {node_adj}")
+
+    except Exception as e:
+        print(f"Constructing three hold nim game graph: {e}")
 
 if __name__ == "__main__":
     main()

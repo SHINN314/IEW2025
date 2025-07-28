@@ -58,6 +58,15 @@ def draw_edges(x, y):
     return next_node_list
 
 def construct_three_hold_nim_graph(stone_num):
-    
+    nodes = []
+
+    for k in range(0, stone_num):
+        for l in range(0, k + 1):
+            x = l
+            y = k - l
+            node_adj = draw_edges(x, y)
+            nodes.append(node_adj)
+
+    return nodes
 
 
