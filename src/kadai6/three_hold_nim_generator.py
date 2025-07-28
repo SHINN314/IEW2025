@@ -13,6 +13,15 @@ def draw_vertical_edges(x, y):
 
     return vertical_next_node_set
 
+def draw_horizon_edges(x, y):
+    horizon_next_node_set = set()
+
+    while(x > 0):
+        x -= 1
+        next_node = pairing_function(x, y)
+        horizon_next_node_set.add(next_node)
+
+    return horizon_next_node_set
 
 def draw_edges(nim, game_graph: GameGraph):
     for k in range(0, nim):
