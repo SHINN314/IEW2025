@@ -9,33 +9,16 @@ import roopy_grundy
 import three_hold_nim_generator as nim_generator
 
 def main():
-    x, y = map(int, input("Input x and y of grid: ").split())
-
-    # display node as integer
+    x, y = map(int, input("Initialize x and y. Please input like 'x y': ").split())
     node = nim_generator.pairing_function(x, y)
-    print(f"node as integer: {node}")
+    game_graph = GameGraph()
 
-    # calculate vertical next node set
+    # calculate next node list
     try:
-        vertical_next_node_set = nim_generator.draw_vertical_edges(x, y)
-
-        print(f"grid ({x}, {y})'s next node: {vertical_next_node_set}")
+        nodes = nim_generator.draw_edges(x, y)
+        print(f"Node {node}: Adjacency list {nodes}")
     except Exception as e:
-        print(f"Drawing vertical next node set error: {e}")
-
-    # calculate horizon next node set
-    try:
-        horizon_next_node_set = nim_generator.draw_horizon_edges(x, y)
-        print(f"grid ({x}, {y})'s next node: {horizon_next_node_set}")
-    except Exception as e:
-        print(f"Drawing horizon next node set error: {e}")
-
-    # calculate diagonal next node set
-    try:
-        diagonal_next_node_set = nim_generator.draw_diagonal_edges(x, y)
-        print(f"grid ({x}, {y})'s next node: {diagonal_next_node_set}")
-    except Exception as e:
-        print(f"Drawing next node set error: {e}")
+        print(e)
 
 if __name__ == "__main__":
     main()

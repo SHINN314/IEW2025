@@ -38,24 +38,26 @@ def draw_diagonal_edges(x, y):
 
     return diagonal_next_node_set
 
-def draw_edges(nim, game_graph: GameGraph):
-    for k in range(0, nim):
-        x = 0
-        y = k
-        next_node_set = set()
+def draw_edges(x, y):
+    # initialize sets
+    next_node_set = set()
+    vertical_next_node_set = draw_vertical_edges(x, y)
+    horizon_next_node_set = draw_horizon_edges(x, y)
+    diagonal_next_node_set = draw_diagonal_edges(x, y)
 
-        for l in range(0, k + 1):
-            vertical_next_node_set = draw_vertical_edges(x, y)
-            horizon_next_node_set = draw_horizon_edges(x, y)
-            diagonal_next_node_set = draw_diagonal_edges(x, y)
+    # union all initialized sets
+    next_node_set = next_node_set.union(
+        vertical_next_node_set,
+        horizon_next_node_set,
+        diagonal_next_node_set
+    )
 
-            # union all sets
-            next_node_set.union(vertical_next_node_set)
-            next_node_set.union(horizon_next_node_set)
-            next_node_set.union(diagonal_next_node_set)
+    # convert set to list
+    next_node_list = list(next_node_set)
 
-            next_node_list = list(next_node_set) # convert set to list
+    return next_node_list
 
-            return next_node_list
+def construct_three_hold_nim_graph(stone_num):
+    
 
 
