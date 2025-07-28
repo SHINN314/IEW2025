@@ -1,6 +1,20 @@
 from adjacency_list import GameGraph
 
 def mex(integer_set):
+    """
+    Calculate mex which defined mex(integer_set) = min({i | i not in integer_set})
+
+    Parameters
+    -------
+    integer_set: set
+        Set included N.
+        In this module, set is grundy numbers of G's next node.
+
+    Returns
+    -------
+    i: int
+        mex of integer_sets
+    """
     integer_list = list(integer_set)
     i = 0
     while True:
@@ -9,7 +23,19 @@ def mex(integer_set):
         i += 1
 
 def initialize_grundy_numbers(game_graph: GameGraph):
-    """Initialize Grundy numbers for all nodes in the game graph"""
+    """
+    Initialize grundy numbers of game_graph.
+
+    Parameters
+    -------
+    game_graph: GameGraph
+        The game_graph which is calculate grundy numbers
+
+    Returns
+    -------
+    grundy_numbers: list
+        Initialized grundy numbers.
+    """
     grundy_numbers = []
 
     for adjacent_nodes in game_graph.nodes:
@@ -23,6 +49,23 @@ def initialize_grundy_numbers(game_graph: GameGraph):
     return grundy_numbers
 
 def m_n(game_graph: GameGraph, node, grundy_numbers):
+    """
+    Calculate mex of Grundy numbers of a given node's adjacent nodes.
+
+    Parameters
+    ----------
+    game_graph : GameGraph
+        The game graph which is expressed as adjacency list.
+    node : int
+        The target node index for which to calculate mex.
+    grundy_numbers : list
+        List of current Grundy numbers for all nodes.
+
+    Returns
+    -------
+    int
+        The mex (minimum excludant) value of adjacent nodes' Grundy numbers.
+    """
     # set adjacency grundy numbers set
     adj_grundy_set = set()
 
@@ -34,7 +77,24 @@ def m_n(game_graph: GameGraph, node, grundy_numbers):
     return mex(adj_grundy_set)
 
 
-def calculate_n_grundy_number(game_graph: GameGraph, node, grundy_numbers):    
+def calculate_n_grundy_number(game_graph: GameGraph, node, grundy_numbers):
+    """
+    Calculate the Grundy number for a single node using the loopy Grundy algorithm.
+
+    Parameters
+    ----------
+    game_graph : GameGraph
+        The game graph which is expressed as adjacency list.
+    node : int
+        The target node index for which to calculate Grundy number.
+    grundy_numbers : list
+        List of current Grundy numbers for all nodes.
+
+    Returns
+    -------
+    int or float
+        The calculated Grundy number for the node, or float("inf") if undetermined.
+    """
     if grundy_numbers[node] != float("inf"):
         return grundy_numbers[node]
     else:
@@ -55,6 +115,21 @@ def calculate_n_grundy_number(game_graph: GameGraph, node, grundy_numbers):
         return node_m_n
     
 def calculate_n_grundy_numbers(game_graph: GameGraph, grundy_numbers):
+    """
+    Calculate Grundy numbers for all nodes in the graph using one iteration.
+
+    Parameters
+    ----------
+    game_graph : GameGraph
+        The game graph which is expressed as adjacency list.
+    grundy_numbers : list
+        List of current Grundy numbers for all nodes.
+
+    Returns
+    -------
+    list
+        Updated list of Grundy numbers for all nodes.
+    """
     # initialize new grundy_numbers
     new_grundy_numbers = []
 
@@ -65,6 +140,22 @@ def calculate_n_grundy_numbers(game_graph: GameGraph, grundy_numbers):
     return new_grundy_numbers
 
 def calculate_grundy_numbers(game_graph: GameGraph):
+    """
+    Calculate the final Grundy numbers for all nodes using iterative loopy Grundy algorithm.
+
+    This function iteratively calculates Grundy numbers until convergence is reached.
+    The algorithm handles cycles in the game graph by using the loopy Grundy approach.
+
+    Parameters
+    ----------
+    game_graph : GameGraph
+        The game graph which is expressed as adjacency list.
+
+    Returns
+    -------
+    list
+        Final list of Grundy numbers for all nodes in the graph.
+    """
     pre_grundy_numbers = initialize_grundy_numbers(game_graph)
 
     while True:
