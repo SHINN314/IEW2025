@@ -26,7 +26,7 @@ def main():
         nodes = nim_generator.construct_three_hold_nim_graph(stone_num)
 
         for node, node_adj in enumerate(nodes):
-            print(f"Node {node}: Adfacency list {node_adj}")
+            print(f"Node {node}: Adjacency list {node_adj}")
 
     except Exception as e:
         print(f"Constructing three hold nim game graph: {e}")
