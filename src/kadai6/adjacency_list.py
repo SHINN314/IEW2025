@@ -1,10 +1,55 @@
 class GameGraph():
+    """
+    A class to represent a game graph using adjacency list representation.
+    
+    Attributes
+    ----------
+    nodes : list
+        List of adjacency lists for each node in the graph.
+    total_nodes : int
+        Total number of nodes in the graph.
+    """
+    
     def __init__(self):
+        """
+        Initialize an empty GameGraph.
+        
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        None
+        """
         self.nodes = []
         self.total_nodes = None
 
     def load_from_file(self, file_path):
-        """Load graph from file where each line format is 'node_id: adjacent_node1 adjacent_node2 ...'"""
+        """
+        Load graph from file where each line format is 'node_id: adjacent_node1 adjacent_node2 ...'.
+        
+        The file format expects each line to contain a node ID followed by a colon,
+        then space-separated adjacent node IDs. Empty lines are skipped.
+        Lines with no adjacent nodes (only 'node_id:') represent terminal states.
+        
+        Parameters
+        ----------
+        file_path : str
+            Path to the file containing the graph data.
+            
+        Returns
+        -------
+        None
+            The method modifies the instance attributes in-place.
+            
+        Raises
+        ------
+        ValueError
+            If a line doesn't contain ':' or if node ID is not a valid integer.
+        FileNotFoundError
+            If the specified file doesn't exist.
+        """
         with open(file_path, "r") as f:
             node_dict = {}  # Temporary dictionary to store nodes by ID
             
