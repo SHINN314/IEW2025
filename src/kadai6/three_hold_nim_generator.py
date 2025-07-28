@@ -23,6 +23,21 @@ def draw_horizon_edges(x, y):
 
     return horizon_next_node_set
 
+def draw_diagonal_edges(x, y):
+    diagonal_next_node_set = set()
+
+    if x + y != 3:
+        return diagonal_next_node_set
+    else:
+        if x - 1 >= 0:
+            next_node = pairing_function(x - 1, y + 1)
+            diagonal_next_node_set.add(next_node)
+        if y - 1 >= 0:
+            next_node = pairing_function(x + 1, y - 1)
+            diagonal_next_node_set.add(next_node)
+
+    return diagonal_next_node_set
+
 def draw_edges(nim, game_graph: GameGraph):
     for k in range(0, nim):
         x = 0
