@@ -27,6 +27,7 @@ class GameGraph():
 
     def set_nodes(self, new_nodes):
         self.nodes = new_nodes
+        self.total_nodes = len(new_nodes)
 
     def load_from_file(self, file_path):
         """
