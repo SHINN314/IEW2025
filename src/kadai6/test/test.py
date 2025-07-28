@@ -10,12 +10,21 @@ import three_hold_nim_generator as nim_generator
 
 def main():
     x, y = map(int, input("Input x and y of grid: ").split())
+
+    # calculate vertical next node set
     try:
         vertical_next_node_set = nim_generator.draw_vertical_edges(x, y)
 
         print(f"grid ({x}, {y})'s next node: {vertical_next_node_set}")
     except Exception as e:
         print(f"Drawing vertical next node set error: {e}")
+
+    # calculate horizon next node set
+    try:
+        horizon_next_node_set = nim_generator.draw_horizon_edges(x, y)
+        print(f"grid ({x}, {y})'s next node: {horizon_next_node_set}")
+    except Exception as e:
+        print(f"Drawing horizon next node set error: {e}")
 
 if __name__ == "__main__":
     main()
