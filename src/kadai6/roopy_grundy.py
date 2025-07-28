@@ -1,10 +1,9 @@
 from adjacency_list import GameGraph
 
-def mex(grundy_values_set):
-    """Calculate minimum excludant (mex) of a set of Grundy numbers"""
+def mex(integer_set):
     i = 0
     while True:
-        if i not in grundy_values_set:
+        if i not in integer_set:
             return i
         i += 1
 

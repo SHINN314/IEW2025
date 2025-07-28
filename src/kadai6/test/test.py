@@ -35,5 +35,16 @@ def main():
     except Exception as e:
         print(f"❌ Error initializing Grundy numbers: {e}")
 
+    print(game_graph.nodes)
+    print(grundy_numbers)
+
+    # calculate m_n
+    try:
+        for node, _ in enumerate(game_graph.nodes):
+            m_n = roopy_grundy.m_n(game_graph, node)
+            print(f"Node: {node}: m_n = {m_n}")
+    except Exception as e:
+        print(f"Error calculating m_n: {e}")
+
 if __name__ == "__main__":
     main()
