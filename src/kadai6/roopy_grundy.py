@@ -63,4 +63,15 @@ def calculate_n_grundy_numbers(game_graph: GameGraph, grundy_numbers):
         new_grundy_numbers.append(grundy_number)
 
     return new_grundy_numbers
+
+def calculate_grundy_numbers(game_graph: GameGraph):
+    pre_grundy_numbers = initialize_grundy_numbers(game_graph)
+
+    while True:
+        current_grundy_numbers = calculate_n_grundy_numbers(game_graph, pre_grundy_numbers)
+
+        if current_grundy_numbers == pre_grundy_numbers:
+            return current_grundy_numbers
+
+        pre_grundy_numbers = current_grundy_numbers        
     
