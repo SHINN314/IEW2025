@@ -12,6 +12,7 @@ def main():
     file_path = input("Enter the path to the game graph file: ")
 
     # load file
+    print(f"----- load file -----")
     try:
         game_graph.load_from_file(file_path)
         print(f"✅ Game graph loaded successfully with {game_graph.total_nodes} nodes.")
@@ -24,6 +25,7 @@ def main():
         print(f"❌ Unexpected error: {e}")
 
     # initialize Grundy numbers
+    print(f"----- initialize grundy numbers -----")
     try:
         grundy_numbers = roopy_grundy.initialize_grundy_numbers(game_graph)
 
@@ -35,16 +37,23 @@ def main():
     except Exception as e:
         print(f"❌ Error initializing Grundy numbers: {e}")
 
-    print(game_graph.nodes)
-    print(grundy_numbers)
-
     # calculate m_n
+    print(f"----- calculate m_n -----")
     try:
         for node, _ in enumerate(game_graph.nodes):
             m_n = roopy_grundy.m_n(game_graph, node, grundy_numbers)
             print(f"Node: {node}: m_n = {m_n}")
     except Exception as e:
         print(f"Error calculating m_n: {e}")
+
+    # calculate n_grundy_number
+    print(f"----- calculate grundy number -----")
+    try:
+        for node, _ in enumerate(game_graph.nodes):
+            grundy_number = roopy_grundy.calculate_n_grundy_number(game_graph, node, grundy_numbers)
+            print(f"Node {node}: grundy number = {grundy_number}")
+    except Exception as e:
+        print(f"Error calculating grundy number: {e}")
 
 if __name__ == "__main__":
     main()
