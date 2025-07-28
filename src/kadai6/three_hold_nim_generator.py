@@ -30,8 +30,8 @@ def draw_edges(nim, game_graph: GameGraph):
         next_node_set = set()
 
         for l in range(0, k + 1):
-            vertical_next_node_set = draw_vertical_edges()
-            horizon_next_node_set = draw_horizon_edges()
+            vertical_next_node_set = draw_vertical_edges(x, y)
+            horizon_next_node_set = draw_horizon_edges(x, y)
             diagonal_next_node_set = draw_diagonal_edges()
 
             # union all sets
