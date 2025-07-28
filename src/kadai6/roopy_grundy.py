@@ -61,4 +61,6 @@ def calculate_n_grundy_numbers(game_graph: GameGraph, grundy_numbers):
     for node, _ in enumerate(game_graph.nodes):
         grundy_number = calculate_n_grundy_number(game_graph, node, grundy_numbers)
         new_grundy_numbers.append(grundy_number)
+
+    return new_grundy_numbers
     
